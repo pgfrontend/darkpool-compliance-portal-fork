@@ -1,6 +1,5 @@
 import { Box } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { LeftMenuDrawer } from '../Drawer/LeftMenuDrawer'
 import Navbar from '../Navigation/Navbar'
 import { useAccount } from 'wagmi'
 import { chainsConfig } from '../../constants'
@@ -44,7 +43,6 @@ const Layout: React.FC<Props> = ({ children, title }) => {
         title={title}
         onToogle={onToogle}
       />
-      {/* <LeftMenuDrawer drawerWidth={drawerWidth} toogle={toogle} /> */}
       <Box
         component='main'
         sx={{

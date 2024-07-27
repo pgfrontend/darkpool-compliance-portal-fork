@@ -12,6 +12,9 @@ import {
 import { Menu as MenuIcon, Close } from '@mui/icons-material'
 import { WalletConnectButton } from '../Button'
 import { ChainSwitchButton } from '../Button/ChainSwitchButton'
+import Image from 'next/image'
+import logo from '/public/logo.svg'
+
 
 interface NavbarProps {
   title: string
@@ -42,6 +45,22 @@ const Navbar: React.FC<NavbarProps> = ({ title, onToogle }) => {
           padding: '0px',
         }}
       >
+        <Box
+          sx={{
+            // width: 28,
+            // height: 28,
+            // background: '#77ED91',
+            borderRadius: 9999,
+          }}
+        >
+          <Image
+            src={logo}
+            // width={28}
+            // height={28}
+            alt={'Singularity Logo'}
+            priority={true}
+          />
+        </Box>
         <Box
           display='flex'
           color={theme.palette.common.white}
