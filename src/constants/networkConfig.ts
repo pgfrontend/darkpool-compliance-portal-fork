@@ -47,17 +47,17 @@ export const networkConfig: { [chainId: number]: NetworkConfig } = {
     },
   },
   [ChainId.HARDHAT]: {
-    complianceManager: '0x3A906C603F080D96dc08f81CF2889dAB6FF299dE',
-    darkpoolAssetManager: '0x716473Fb4E7cD49c7d1eC7ec6d7490A03d9dA332',
+    complianceManager: '0x987Aa6E80e995d6A76C4d061eE324fc760Ea9F61',
+    darkpoolAssetManager: '0xe24e7570Fe7207AdAaAa8c6c89a59850391B5276',
     explorerUrl: {
       tx: 'https://sepolia.etherscan.io/tx/',
       address: 'https://sepolia.etherscan.io/address/',
       block: 'https://sepolia.etherscan.io/block/',
     },
   },
-  [ChainId.HARDHAT_ARBITRUM]: {
-    complianceManager: '0xB6b14C427cA0AC44FE9a41332e8fE9BB4Ef244Ce',
-    darkpoolAssetManager: '0x920D80F5490c073A46076a61897A6e6dc88Bbf0D',
+  [ChainId.HARDHAT_BASE]: {
+    complianceManager: '0x70bDA08DBe07363968e9EE53d899dFE48560605B',
+    darkpoolAssetManager: '0x045857BDEAE7C1c7252d611eB24eB55564198b4C',
     explorerUrl: {
       tx: 'https://arbiscan.io/tx/',
       address: 'https://arbiscan.io/address/',

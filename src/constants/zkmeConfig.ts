@@ -10,5 +10,5 @@ export const zkMeConfig = {
 
 export const zkMekChainMapping:Record<number, number> = {
     [ChainId.HARDHAT_ARBITRUM] : ChainId.ARBITRUM_ONE,
-    [ChainId.HARDHAT_POLYGON] : ChainId.POLYGON,
+    [ChainId.HARDHAT_BASE] : ChainId.BASE,
 }

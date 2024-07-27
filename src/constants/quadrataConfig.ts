@@ -33,7 +33,7 @@ export const quadKybConfig: Record<number, QuadClientKybConfig> = {
         protocolName: 'Singularity',
         _debug: true,
     },
-    [ChainId.HARDHAT_POLYGON]: {
+    [ChainId.HARDHAT_BASE]: {
         apiUrl: 'https://int.quadrata.com/api/v1',
         environment: QuadClientEnvironment.SANDBOX,
         protocolName: 'Singularity',

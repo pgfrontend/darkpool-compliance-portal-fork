@@ -1,5 +1,6 @@
 import { ChainId } from '../types'
 import { KeyringConfig } from '@keyringnetwork/frontend-sdk'
+import { networkConfig } from './networkConfig'
 
 export const keyringConfig: { [chainId: number]: KeyringConfig } = {
   [ChainId.MAINNET]: {
@@ -29,7 +30,7 @@ export const keyringConfig: { [chainId: number]: KeyringConfig } = {
     disablePolicyChoosing: true,
   },
   [ChainId.HARDHAT]: {
-    keyringGuardAddress: '0x3A906C603F080D96dc08f81CF2889dAB6FF299dE',
+    keyringGuardAddress: networkConfig[ChainId.HARDHAT].complianceManager,
     urlOverrides: {
       onboardingUrl: 'https://uat-app.keyring.network/onboarding',
       zkCredentialUrl: 'https://uat-app.keyring.network/zkcredentials',

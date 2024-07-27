@@ -19,8 +19,8 @@ const hardhatArbitrum = defineChain({
 })
 
 const hardhatPolygon = defineChain({
-    id: ChainId.HARDHAT_POLYGON,
-    name: 'Hardhat Polygon',
+    id: ChainId.HARDHAT_BASE,
+    name: 'Hardhat Base',
     nativeCurrency: {
         decimals: 18,
         name: 'Ether',
@@ -60,14 +60,14 @@ const bounceBitMainnet = defineChain({
 const wagmiChainIdMapping: Record<number, Chain> = {
     [ChainId.MAINNET]: mainnet,
     [ChainId.SEPOLIA]: sepolia,
-    [ChainId.ARBITRUM_ONE]: arbitrum,
     [ChainId.POLYGON]: polygon,
     [ChainId.BASE]: base,
     [ChainId.BounceBit]: bounceBitMainnet,
     [ChainId.BounceBitTestnet]: bounceBitTestnet,
     [ChainId.HARDHAT]: hardhat,
-    [ChainId.HARDHAT_POLYGON]: hardhatPolygon,
+    [ChainId.HARDHAT_BASE]: hardhatPolygon,
     [ChainId.HARDHAT_ARBITRUM]: hardhatArbitrum,
+    [ChainId.ARBITRUM_ONE]: arbitrum,
 }
 
 const supportedWagmiChains = chainsConfig.supportedChains.map((chainId) => wagmiChainIdMapping[chainId])

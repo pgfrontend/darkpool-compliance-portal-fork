@@ -37,7 +37,7 @@ export type NetworkConfig = {
 export enum ChainId {
   HARDHAT = 31337,
   HARDHAT_ARBITRUM = 31338,
-  HARDHAT_POLYGON = 31339,
+  HARDHAT_BASE = 31339,
   MAINNET = 1,
   GOERLI = 5,
   SEPOLIA = 11155111,
@@ -47,7 +47,7 @@ export enum ChainId {
   CELO = 42220,
   BNB = 56,
   AVALANCHE = 43114,
-  BASE = 100,
+  BASE = 8453,
   BounceBit = 6001,
   BounceBitTestnet = 6000,
 }

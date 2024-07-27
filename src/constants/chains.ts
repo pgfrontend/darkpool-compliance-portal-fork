@@ -17,10 +17,10 @@ export const supportedChains: { [chainId: number]: ChainConfig } = {
         icon: '/images/chain/arbitrum.svg',
         chainId: ChainId.ARBITRUM_ONE
     },
-    [ChainId.POLYGON]: {
-        name: 'Polygon',
-        icon: '/images/chain/polygon.svg',
-        chainId: ChainId.POLYGON
+    [ChainId.BASE]: {
+        name: 'Base',
+        icon: '/images/chain/base.svg',
+        chainId: ChainId.BASE
     },
     [ChainId.SEPOLIA]: {
         name: 'Sepolia',
@@ -37,10 +37,10 @@ export const supportedChains: { [chainId: number]: ChainConfig } = {
         icon: '/images/chain/arbitrum.svg',
         chainId: ChainId.HARDHAT_ARBITRUM
     },
-    [ChainId.HARDHAT_POLYGON]: {
-        name: 'Hardhat Polygon',
-        icon: '/images/chain/polygon.svg',
-        chainId: ChainId.HARDHAT_POLYGON
+    [ChainId.HARDHAT_BASE]: {
+        name: 'Hardhat Base',
+        icon: '/images/chain/base.svg',
+        chainId: ChainId.HARDHAT_BASE
     },
     [ChainId.BounceBit]: {
         name: 'BounceBit',
