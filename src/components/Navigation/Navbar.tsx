@@ -33,8 +33,8 @@ const Navbar: React.FC<NavbarProps> = ({ title, onToogle }) => {
         // background: '#0D0D0D',
         boxShadow: 'none',
         background: 'transparent',
-        height: '131px',
-        padding: '32px 8px',
+        height: '99px',
+        padding: '32px 8px 0px 8px',
       }}
     >
       <Toolbar
