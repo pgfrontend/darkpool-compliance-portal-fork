@@ -1,5 +1,5 @@
 import { Provider, verifyWithZkMeServices, ZkMeWidget } from "@zkmelabs/widget"
-import { zkMeConfig, zkMekChainMapping } from "../../constants/zkmeConfig"
+import { getZkMeConfigByChainId, zkMekChainMapping } from "../../constants/zkmeConfig"
 import { useState } from "react"
 import { ethers } from "ethers"
 import { isAddressEquals } from "../../helpers/utils"
@@ -17,6 +17,7 @@ export function useZkMe(address: string | undefined, chainId: number) {
 
     const checkCompliance = async (address: string): Promise<boolean> => {
         if (ethers.utils.isAddress(address)) {
+            const zkMeConfig = getZkMeConfigByChainId(chainId)
             const result = await verifyWithZkMeServices(zkMeConfig.APP_ID, address)
             return result
         } else {
@@ -45,7 +46,13 @@ export function useZkMe(address: string | undefined, chainId: number) {
              * @returns A promise that resolves to the access token.
              */
             async getAccessToken() {
-                const result = await axios.get('/api/zkmeAccessToken')
+                console.log("=======getToken")
+                const result = await axios.get('/api/zkmeAccessToken', {
+                    params: {
+                        chainId,
+                    },
+                })
+                console.log("=======getToken",result)
                 if (result.status === 200) {
                     return result.data.accessToken
                 } else {
@@ -70,6 +77,8 @@ export function useZkMe(address: string | undefined, chainId: number) {
             }
         }
 
+
+        const zkMeConfig = getZkMeConfigByChainId(chainId)
         const refeindChainId = refineChainId(chainId)
 
         const zkMeWidget = new ZkMeWidget(
@@ -78,6 +87,8 @@ export function useZkMe(address: string | undefined, chainId: number) {
             hexlify(refeindChainId),
             provider
         )
+
+        console.log("zkMeConfig", zkMeConfig)
 
         zkMeWidget.on('finished', (verifiedAccount) => {
             if (isAddressEquals(verifiedAccount, userConnectedAddress)) {
