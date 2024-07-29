@@ -24,20 +24,30 @@ import { dappConfig } from '../../constants/featureConfig'
 import { ComplianceOnboardingVendor } from '../../types'
 import { complianceVendorConfig } from '../../constants/complianceConfig'
 import { ComplianceOnboardingButton } from '../Button/ComplianceOnboardingButton'
+import { AlignedRow } from '../Box/AlignedRow'
+import { ModalButton } from '../Button/ModalButton'
 
 interface VerifyAddressCardProps {
   logout: () => void
+  verifyAgain: () => void
+  verified: boolean
+  onVerify: (vendor: ComplianceOnboardingVendor) => void
 }
 
-export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
+export const VerifyAddressCard = ({
+  logout,
+  verifyAgain,
+  verified,
+  onVerify,
+}: VerifyAddressCardProps) => {
   const { address, chainId } = useAccount()
   const theme = useTheme()
-  const [isVerified, setIsVerified] = useState(false)
+
   const { showPendingToast } = useToast()
 
-  const onSuccess = () => {
-    setIsVerified(true)
-  }
+  // const onSuccess = () => {
+  //   setIsVerified(true)
+  // }
 
   return (
     <ContentBox
@@ -98,16 +108,22 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
         </Typography>
       </Stack>
 
-      <Typography
-        fontSize='24px'
-        lineHeight='27px'
-        fontWeight='700'
-        letterSpacing='-1.5%'
-      >
-        Verify your wallet address
-      </Typography>
+      <AlignedRow width={'100%'}>
+        <Typography
+          fontSize='24px'
+          lineHeight='27px'
+          fontWeight='700'
+          letterSpacing='-1.5%'
+        >
+          Verify your wallet address
+        </Typography>
+        <ModalButton
+          title='Refresh'
+          onClick={verifyAgain}
+        />
+      </AlignedRow>
 
-      {isVerified && (
+      {verified && (
         <Box
           padding='32px'
           bgcolor='#3D4C44'
@@ -137,7 +153,7 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
           </Stack>
         </Box>
       )}
-      {!isVerified && (
+      {!verified && (
         <Stack
           alignItems={'center'}
           borderRadius='4px'
@@ -145,7 +161,7 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
           <WarningAlert text='Your wallet address has not been verified yet, please verify your identity through KYC or KYB by choosing a platform below and verify again before you proceed!' />
         </Stack>
       )}
-      {!isVerified &&
+      {!verified &&
         dappConfig[chainId!].complianceVendors.map(
           (
             vendor,
@@ -171,8 +187,12 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
                 >
                   {complianceVendorConfig[vendor].name}
                 </Typography>
-                <StyledComplianceChip label='KYC' />
-                <StyledComplianceChip label='KYB' />
+                {complianceVendorConfig[vendor].isKyc && (
+                  <StyledComplianceChip label='KYC' />
+                )}
+                {complianceVendorConfig[vendor].isKyb && (
+                  <StyledComplianceChip label='KYB' />
+                )}
               </Stack>
 
               <Typography
@@ -183,10 +203,10 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
                 {complianceVendorConfig[vendor].description}
               </Typography>
 
-              {/* <Button
+              <Button
                 variant='contained'
                 color='primary'
-                onClick={handleVerify}
+                onClick={() => onVerify(vendor)}
                 sx={{
                   width: 'fit-content',
                   padding: '10px',
@@ -208,7 +228,7 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
                     alt='external-link-icon'
                   />
                 </Stack>
-              </Button> */}
+              </Button>
               {/* <Box width={'200px'}>
                 <ComplianceOnboardingButton
                   loading={false}
@@ -248,15 +268,6 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
           Disconnect
         </Stack>
       </Button> */}
-
-      {!isVerified && (
-        <ComplianceOnboardingButton
-          loading={false}
-          disabled={false}
-          title={`Verify by your identity`}
-          onSuccess={onSuccess}
-        />
-      )}
     </ContentBox>
   )
 }
