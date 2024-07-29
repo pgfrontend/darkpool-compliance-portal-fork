@@ -27,17 +27,23 @@ import { ComplianceOnboardingButton } from '../Button/ComplianceOnboardingButton
 
 interface VerifyAddressCardProps {
   logout: () => void
+  verifyAgain: () => void
+  verified: boolean
 }
 
-export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
+export const VerifyAddressCard = ({
+  logout,
+  verifyAgain,
+  verified,
+}: VerifyAddressCardProps) => {
   const { address, chainId } = useAccount()
   const theme = useTheme()
-  const [isVerified, setIsVerified] = useState(false)
+
   const { showPendingToast } = useToast()
 
-  const onSuccess = () => {
-    setIsVerified(true)
-  }
+  // const onSuccess = () => {
+  //   setIsVerified(true)
+  // }
 
   return (
     <ContentBox
@@ -107,7 +113,7 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
         Verify your wallet address
       </Typography>
 
-      {isVerified && (
+      {verified && (
         <Box
           padding='32px'
           bgcolor='#3D4C44'
@@ -137,7 +143,7 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
           </Stack>
         </Box>
       )}
-      {!isVerified && (
+      {!verified && (
         <Stack
           alignItems={'center'}
           borderRadius='4px'
@@ -145,7 +151,7 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
           <WarningAlert text='Your wallet address has not been verified yet, please verify your identity through KYC or KYB by choosing a platform below and verify again before you proceed!' />
         </Stack>
       )}
-      {!isVerified &&
+      {!verified &&
         dappConfig[chainId!].complianceVendors.map(
           (
             vendor,
@@ -153,26 +159,48 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
           ) => (
             <StyledCard key={index}>
               <Stack
-                direction='row'
-                gap='8px'
-                alignItems='center'
+                direction={'row'}
+                justifyContent={'space-between'}
+                alignItems={'center'}
               >
-                <Image
-                  src={complianceVendorConfig[vendor].logo}
-                  width={32}
-                  height={32}
-                  alt='chain-icon'
-                />
-                <Typography
-                  fontSize='18px'
-                  lineHeight='24px'
-                  fontWeight='600'
-                  letterSpacing='-1.5%'
+                <Stack
+                  direction='row'
+                  gap='8px'
+                  alignItems='center'
                 >
-                  {complianceVendorConfig[vendor].name}
+                  <Image
+                    src={complianceVendorConfig[vendor].logo}
+                    width={32}
+                    height={32}
+                    alt='chain-icon'
+                  />
+                  <Typography
+                    fontSize='18px'
+                    lineHeight='24px'
+                    fontWeight='600'
+                    letterSpacing='-1.5%'
+                  >
+                    {complianceVendorConfig[vendor].name}
+                  </Typography>
+                  {complianceVendorConfig[vendor].isKyc && (
+                    <StyledComplianceChip label='KYC' />
+                  )}
+                  {complianceVendorConfig[vendor].isKyb && (
+                    <StyledComplianceChip label='KYB' />
+                  )}
+                </Stack>
+
+                <Typography
+                  variant='body-xs'
+                  color={theme.palette.other.primary.p50}
+                  fontWeight='600'
+                  sx={{
+                    cursor: 'pointer',
+                  }}
+                  onClick={verifyAgain}
+                >
+                  Refresh
                 </Typography>
-                <StyledComplianceChip label='KYC' />
-                <StyledComplianceChip label='KYB' />
               </Stack>
 
               <Typography
@@ -248,15 +276,6 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
           Disconnect
         </Stack>
       </Button> */}
-
-      {!isVerified && (
-        <ComplianceOnboardingButton
-          loading={false}
-          disabled={false}
-          title={`Verify by your identity`}
-          onSuccess={onSuccess}
-        />
-      )}
     </ContentBox>
   )
 }

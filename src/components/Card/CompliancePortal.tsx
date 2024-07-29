@@ -24,14 +24,24 @@ import { useComplianceCheck } from '../../hooks/keyring/hook'
 import { AnnounceCard } from './AnnounceCard'
 import { ConnectWalletCard } from './ConnectWalletCard'
 import { VerifyAddressCard } from './VerifyAddressCard'
+import { useCompliance } from '../../hooks/useCompliance'
+import { useToast } from '../../contexts/ToastContext/hooks'
 
 const CompliancePortal: React.FC = () => {
   const [step, setStep] = useState(1)
-  const { chainId, address } = useAccount()
+  const { chainId, address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
+  const [verified, setVerified] = useState(false)
+
+  const { isNotCompliant, isLoading, isCompliant } = useCompliance()
+  const { showPendingToast, closeToast } = useToast()
 
   const handleConnectButton = () => {
     setStep(2)
+  }
+
+  const verifyAgain = () => {
+    setVerified(false)
   }
 
   const logout = () => {
@@ -40,10 +50,24 @@ const CompliancePortal: React.FC = () => {
   }
 
   useEffect(() => {
-    if (address) {
+    if (address && isConnected) {
       setStep(3)
     }
-  }, [chainId, address])
+
+    if (isConnected && isCompliant) {
+      setVerified(true)
+    } else {
+      setVerified(false)
+    }
+
+    if (isLoading && isNotCompliant) {
+      showPendingToast(undefined, 'Compliance check in progress')
+    }
+
+    if (!isLoading) {
+      closeToast()
+    }
+  }, [chainId, address, isConnected, isLoading])
 
   const complianceRender = () => {
     switch (step) {
@@ -52,7 +76,13 @@ const CompliancePortal: React.FC = () => {
       case 2:
         return <ConnectWalletCard />
       case 3:
-        return <VerifyAddressCard logout={logout} />
+        return (
+          <VerifyAddressCard
+            logout={logout}
+            verifyAgain={verifyAgain}
+            verified={verified}
+          />
+        )
       default:
         break
     }
