@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { ReactNode, use, useEffect, useState } from 'react'
 import Image from 'next/image'
 import {
   Box,
@@ -26,15 +26,26 @@ import { ConnectWalletCard } from './ConnectWalletCard'
 import { VerifyAddressCard } from './VerifyAddressCard'
 import { useCompliance } from '../../hooks/useCompliance'
 import { useToast } from '../../contexts/ToastContext/hooks'
+import { ComplianceOnboardingVendor } from '../../types'
+import { useModal } from '@keyringnetwork/frontend-sdk'
+import { useZkMe } from '../../hooks/zkme/hook'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
+import { useQuadrata } from '../../hooks/quadrata/hook'
 
 const CompliancePortal: React.FC = () => {
   const [step, setStep] = useState(1)
-  const { chainId, address, isConnected } = useAccount()
+  const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const [verified, setVerified] = useState(false)
 
-  const { isNotCompliant, isLoading, isCompliant } = useCompliance()
+  const { chainId } = useChainContext()
+  const { isNotCompliant, isLoading, isCompliant, onCheckCompliance } =
+    useCompliance()
   const { showPendingToast, closeToast } = useToast()
+
+  const [showQuadrata, setShowQuadrata] = useState(false)
+  const [quadrataAccessToken, setQuadrataAccessToken] = useState<string>()
+  const [quadrataWidget, setQuadrataWidget] = useState<ReactNode>()
 
   const handleConnectButton = () => {
     setStep(2)
@@ -69,6 +80,42 @@ const CompliancePortal: React.FC = () => {
     }
   }, [chainId, address, isConnected, isLoading])
 
+  const onQuadrataClose = () => {
+    console.log('Quadrata KYB widget closed')
+    setShowQuadrata(false)
+    setQuadrataAccessToken(undefined)
+    setQuadrataWidget(undefined)
+  }
+
+  const { openModal: openKeyringModal } = useModal()
+  const { launchWidget: launchZKmeWidget } = useZkMe(address, chainId)
+  const { getAccessToken, createQuadrataWidget } = useQuadrata(
+    address,
+    chainId,
+    onQuadrataClose
+  )
+
+  const onVerify = async (vendor: ComplianceOnboardingVendor) => {
+    switch (vendor) {
+      case ComplianceOnboardingVendor.KEYRING:
+        openKeyringModal()
+        break
+      case ComplianceOnboardingVendor.ZKME:
+        await launchZKmeWidget()
+        break
+      case ComplianceOnboardingVendor.QUADRATA:
+        const accessToken = await getAccessToken()
+        setQuadrataAccessToken(accessToken)
+        setQuadrataWidget(createQuadrataWidget(accessToken, chainId))
+        setShowQuadrata(true)
+        break
+      default:
+        return
+    }
+
+    onCheckCompliance()
+  }
+
   const complianceRender = () => {
     switch (step) {
       case 1:
@@ -81,6 +128,7 @@ const CompliancePortal: React.FC = () => {
             logout={logout}
             verifyAgain={verifyAgain}
             verified={verified}
+            onVerify={onVerify}
           />
         )
       default:
@@ -99,6 +147,10 @@ const CompliancePortal: React.FC = () => {
         Compliance Portal
       </Typography>
       {complianceRender()}
+
+      {showQuadrata && quadrataAccessToken && quadrataWidget && (
+        <>{quadrataWidget}</>
+      )}
     </StyledBox>
   )
 }

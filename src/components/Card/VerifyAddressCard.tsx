@@ -24,17 +24,21 @@ import { dappConfig } from '../../constants/featureConfig'
 import { ComplianceOnboardingVendor } from '../../types'
 import { complianceVendorConfig } from '../../constants/complianceConfig'
 import { ComplianceOnboardingButton } from '../Button/ComplianceOnboardingButton'
+import { AlignedRow } from '../Box/AlignedRow'
+import { ModalButton } from '../Button/ModalButton'
 
 interface VerifyAddressCardProps {
   logout: () => void
   verifyAgain: () => void
   verified: boolean
+  onVerify: (vendor: ComplianceOnboardingVendor) => void
 }
 
 export const VerifyAddressCard = ({
   logout,
   verifyAgain,
   verified,
+  onVerify,
 }: VerifyAddressCardProps) => {
   const { address, chainId } = useAccount()
   const theme = useTheme()
@@ -104,14 +108,20 @@ export const VerifyAddressCard = ({
         </Typography>
       </Stack>
 
-      <Typography
-        fontSize='24px'
-        lineHeight='27px'
-        fontWeight='700'
-        letterSpacing='-1.5%'
-      >
-        Verify your wallet address
-      </Typography>
+      <AlignedRow width={'100%'}>
+        <Typography
+          fontSize='24px'
+          lineHeight='27px'
+          fontWeight='700'
+          letterSpacing='-1.5%'
+        >
+          Verify your wallet address
+        </Typography>
+        <ModalButton
+          title='Refresh'
+          onClick={verifyAgain}
+        />
+      </AlignedRow>
 
       {verified && (
         <Box
@@ -159,48 +169,30 @@ export const VerifyAddressCard = ({
           ) => (
             <StyledCard key={index}>
               <Stack
-                direction={'row'}
-                justifyContent={'space-between'}
-                alignItems={'center'}
+                direction='row'
+                gap='8px'
+                alignItems='center'
               >
-                <Stack
-                  direction='row'
-                  gap='8px'
-                  alignItems='center'
-                >
-                  <Image
-                    src={complianceVendorConfig[vendor].logo}
-                    width={32}
-                    height={32}
-                    alt='chain-icon'
-                  />
-                  <Typography
-                    fontSize='18px'
-                    lineHeight='24px'
-                    fontWeight='600'
-                    letterSpacing='-1.5%'
-                  >
-                    {complianceVendorConfig[vendor].name}
-                  </Typography>
-                  {complianceVendorConfig[vendor].isKyc && (
-                    <StyledComplianceChip label='KYC' />
-                  )}
-                  {complianceVendorConfig[vendor].isKyb && (
-                    <StyledComplianceChip label='KYB' />
-                  )}
-                </Stack>
-
+                <Image
+                  src={complianceVendorConfig[vendor].logo}
+                  width={32}
+                  height={32}
+                  alt='chain-icon'
+                />
                 <Typography
-                  variant='body-xs'
-                  color={theme.palette.other.primary.p50}
+                  fontSize='18px'
+                  lineHeight='24px'
                   fontWeight='600'
-                  sx={{
-                    cursor: 'pointer',
-                  }}
-                  onClick={verifyAgain}
+                  letterSpacing='-1.5%'
                 >
-                  Refresh
+                  {complianceVendorConfig[vendor].name}
                 </Typography>
+                {complianceVendorConfig[vendor].isKyc && (
+                  <StyledComplianceChip label='KYC' />
+                )}
+                {complianceVendorConfig[vendor].isKyb && (
+                  <StyledComplianceChip label='KYB' />
+                )}
               </Stack>
 
               <Typography
@@ -211,10 +203,10 @@ export const VerifyAddressCard = ({
                 {complianceVendorConfig[vendor].description}
               </Typography>
 
-              {/* <Button
+              <Button
                 variant='contained'
                 color='primary'
-                onClick={handleVerify}
+                onClick={() => onVerify(vendor)}
                 sx={{
                   width: 'fit-content',
                   padding: '10px',
@@ -236,7 +228,7 @@ export const VerifyAddressCard = ({
                     alt='external-link-icon'
                   />
                 </Stack>
-              </Button> */}
+              </Button>
               {/* <Box width={'200px'}>
                 <ComplianceOnboardingButton
                   loading={false}

@@ -26,7 +26,20 @@ export const useComplianceCheck = (
     }
   }, [address])
 
-  return { loading, isCompliant, isNotCompliant }
+  const onCheckCompliance = () => {
+    if (address && ethers.utils.isAddress(address) && chainId) {
+      setLoading(true)
+      isAddressCompliance(address, chainId)
+        .then((isCompliant) => {
+          setIsCompliant(isCompliant)
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
+  }
+
+  return { loading, isCompliant, isNotCompliant, onCheckCompliance }
 }
 
 export const useCompliance = () => {
@@ -36,11 +49,13 @@ export const useCompliance = () => {
     isCompliant,
     isNotCompliant,
     loading: checkLoading,
+    onCheckCompliance,
   } = useComplianceCheck(address, chainId)
 
   return {
     isCompliant,
     isNotCompliant,
     isLoading: checkLoading,
+    onCheckCompliance,
   }
 }
