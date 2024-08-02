@@ -8,7 +8,7 @@ import { BasicDialogProps } from './model'
 import coinbaseImg from '/public/images/wallets/coinbase.svg'
 import metamaskImg from '/public/images/wallets/metamask.svg'
 import walletconnectImg from '/public/images/wallets/walletconnect.svg'
-import { coinbaseWallet, metaMask, walletConnect } from 'wagmi/connectors'
+import { coinbaseWallet, injected, metaMask, walletConnect } from 'wagmi/connectors'
 import { useChainContext } from '../../contexts/ChainContext/hooks'
 import { ConnectData } from 'wagmi/query'
 
@@ -17,7 +17,7 @@ const connectors = [
     id: 'metamask',
     name: 'MetaMask       ',
     icon: metamaskImg,
-    connector: metaMask()
+    connector: injected({ target: 'metaMask' })
   },
   {
     id: 'walletconnect',
