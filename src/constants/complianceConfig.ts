@@ -33,4 +33,12 @@ export const complianceVendorConfig: Record<number, VendorConfig> = {
     isKyc: false,
     isKyb: true,
   },
+  [ComplianceOnboardingVendor.COINBASE_EAS]: {
+    name: 'Coinbase EAS',
+    logo: '/images/compliance/base.svg',
+    description:
+      'Coinbase EAS enables onchain KYC verification by issuing digital certificates tied to Ethereum wallet addresses. Users verify their Coinbase account to receive these certificates',
+    isKyc: true,
+    isKyb: false,
+  },
 }

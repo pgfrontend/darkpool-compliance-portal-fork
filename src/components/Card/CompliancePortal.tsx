@@ -31,6 +31,7 @@ import { useModal } from '@keyringnetwork/frontend-sdk'
 import { useZkMe } from '../../hooks/zkme/hook'
 import { useChainContext } from '../../contexts/ChainContext/hooks'
 import { useQuadrata } from '../../hooks/quadrata/hook'
+import { useCoinbaseEas } from '../../hooks/coinbaseEas/hook'
 
 const CompliancePortal: React.FC = () => {
   const [step, setStep] = useState(1)
@@ -95,6 +96,8 @@ const CompliancePortal: React.FC = () => {
     onQuadrataClose
   )
 
+  const { launchEas } = useCoinbaseEas()
+
   const onVerify = async (vendor: ComplianceOnboardingVendor) => {
     switch (vendor) {
       case ComplianceOnboardingVendor.KEYRING:
@@ -108,6 +111,9 @@ const CompliancePortal: React.FC = () => {
         setQuadrataAccessToken(accessToken)
         setQuadrataWidget(createQuadrataWidget(accessToken, chainId))
         setShowQuadrata(true)
+        break
+      case ComplianceOnboardingVendor.COINBASE_EAS:
+        launchEas()
         break
       default:
         return

@@ -62,4 +62,5 @@ export enum ComplianceOnboardingVendor {
   KEYRING = 1,
   ZKME = 2,
   QUADRATA = 3,
+  COINBASE_EAS = 4,
 }
