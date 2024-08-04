@@ -33,7 +33,6 @@ const CompliancePortal: React.FC = () => {
   const [step, setStep] = useState(StepEnum.NOT_CONNECTED)
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
-  const [verified, setVerified] = useState(false)
 
   const { chainId } = useChainContext()
   const { isNotCompliant, isLoading, isCompliant, onCheckCompliance } =
@@ -49,33 +48,32 @@ const CompliancePortal: React.FC = () => {
     setStep(StepEnum.CONNECTING)
   }
 
-  const verifyAgain = () => {
-    setVerified(false)
-  }
-
   const logout = () => {
     disconnect()
     setStep(StepEnum.NOT_CONNECTED)
   }
 
+  const closeModalAndRefresh = async () => {
+    setOpenInProgress(false)
+    await onCheckCompliance()
+  }
+
   useEffect(() => {
     if (!isConnected) {
       setStep(StepEnum.NOT_CONNECTED)
-    } 
+    }
 
     if (address && isConnected) {
       setStep(StepEnum.CONNECTED)
     }
 
     if (isConnected && isCompliant) {
-      setVerified(true)
       setOpenInProgress(false)
     } else {
-      setVerified(false)
     }
 
     if (isLoading && isNotCompliant) {
-      showPendingToast(undefined, 'Compliance check in progress')
+      showPendingToast(undefined, 'Compliance checking')
     }
 
     if (!isLoading) {
@@ -138,9 +136,10 @@ const CompliancePortal: React.FC = () => {
         return (
           <VerifyAddressCard
             logout={logout}
-            verifyAgain={verifyAgain}
-            verified={verified}
             onVerify={onVerify}
+            isLoading={isLoading}
+            isCompliant={isCompliant}
+            onCheckCompliance={onCheckCompliance}
           />
         )
       default:
@@ -167,6 +166,7 @@ const CompliancePortal: React.FC = () => {
       <LoadingComplianceModal
         open={openInProgress && !showQuadrata}
         onClose={() => { }}
+        doRefresh={closeModalAndRefresh}
       >
         <></>
       </LoadingComplianceModal>

@@ -4,15 +4,12 @@ import React from 'react'
 import { ModalButton } from '../Button/ModalButton'
 import { BasicModal } from './BasicModal'
 
-export const LoadingComplianceModal: React.FC<ModalProps> = ({
+export const LoadingComplianceModal: React.FC<ModalProps & { doRefresh: () => void }> = ({
   open,
   onClose,
+  doRefresh,
 }) => {
   const theme = useTheme()
-
-  const doRefresh = () => {
-    window.location.reload()
-  }
 
   return (
     <BasicModal
