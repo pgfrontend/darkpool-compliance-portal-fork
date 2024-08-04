@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import { Menu as MenuIcon } from '@mui/icons-material'
 import {
+  AppBar,
   Box,
   IconButton,
-  Toolbar,
   Stack,
+  Toolbar,
   Typography,
-  AppBar,
-  useTheme,
-  useMediaQuery,
+  useTheme
 } from '@mui/material'
-import { Menu as MenuIcon, Close } from '@mui/icons-material'
+import Image from 'next/image'
+import React from 'react'
 import { WalletConnectButton } from '../Button'
 import { ChainSwitchButton } from '../Button/ChainSwitchButton'
-import Image from 'next/image'
 import logo from '/public/logo.svg'
+import { useRouter } from 'next/router'
 
 
 interface NavbarProps {
@@ -23,6 +23,12 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ title, onToogle }) => {
   const theme = useTheme()
+
+  const router = useRouter()
+
+  const handleLogoClick = () => {
+    router.push('/')
+  }
 
   return (
     <AppBar
@@ -51,7 +57,9 @@ const Navbar: React.FC<NavbarProps> = ({ title, onToogle }) => {
             // height: 28,
             // background: '#77ED91',
             borderRadius: 9999,
+            cursor: 'pointer',
           }}
+          onClick={handleLogoClick}
         >
           <Image
             src={logo}

@@ -4,16 +4,19 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import { Box, Menu, MenuItem, Stack, Typography } from "@mui/material"
 import Image from 'next/image'
-import { useState } from "react"
-import { useSwitchChain } from "wagmi"
+import { useEffect, useState } from "react"
+import { useAccount, useSwitchChain } from "wagmi"
 import { chainsConfig } from "../../constants"
 import { supportedChains } from "../../constants/chains"
 import { useChainContext } from "../../contexts/ChainContext/hooks"
+import { useRouter } from "next/router"
 
 
 export const ChainSwitchButton: React.FC = () => {
 
+    const router = useRouter();
     const { switchChainAsync } = useSwitchChain()
+    const { isConnected, chainId } = useAccount()
     const { chainId: currentChainId } = useChainContext()
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -29,7 +32,28 @@ export const ChainSwitchButton: React.FC = () => {
         setOpenPopup(false)
     }
 
+    const isChainIdParamExists = () => {
+        if (!router.query.chain || typeof router.query.chain != 'string') {
+            return false
+        }
+
+        try {
+            const tmpChainId = parseInt(router.query.chain)
+            if (chainsConfig.supportedChains.includes(tmpChainId)) {
+                return true
+            } else {
+                return false
+            }
+        } catch (e) {
+            return false
+        }
+    }
+
     const handleSwitchChain = async (chainId: number) => {
+        if (isChainIdParamExists()) {
+            console.log("here it is")
+            await router.push('/');
+        }
         await switchChainAsync({ chainId })
         handleClose()
     }
@@ -39,6 +63,12 @@ export const ChainSwitchButton: React.FC = () => {
     const currentChainConfig = supportedChains[currentChainId]
 
     const isCurrentChainSupported = chainsConfig.supportedChains.includes(currentChainId)
+
+    useEffect(() => {
+        if (currentChainId && isConnected && chainId && currentChainId !== chainId) {
+            switchChainAsync({ chainId: currentChainId })
+        }
+    }, [currentChainId, isConnected, chainId])
 
     return (
         <Box>

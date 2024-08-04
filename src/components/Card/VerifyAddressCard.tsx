@@ -1,31 +1,23 @@
 import { Box, Button, Stack, Typography, useTheme } from '@mui/material'
+import Image from 'next/image'
+import { useAccount } from 'wagmi'
+import Ethereum from '../../../public/images/chain/ethereum.png'
+import ExternalLink from '../../../public/images/external-link-icon.svg'
+import Verified from '../../../public/images/verified-icon.svg'
+import { complianceVendorConfig } from '../../constants/complianceConfig'
+import { dappConfig } from '../../constants/featureConfig'
+import { useToast } from '../../contexts/ToastContext/hooks'
+import { formatWalletHash } from '../../helpers'
+import { ComplianceOnboardingVendor } from '../../types'
+import { WarningAlert } from '../Alert/InfoAlert'
+import { AlignedRow } from '../Box/AlignedRow'
+import { ModalButton } from '../Button/ModalButton'
 import {
   ContentBox,
   StyledCard,
   StyledComplianceChip,
 } from './CompliancePortal'
-import Image from 'next/image'
-import Ethereum from '../../../public/images/chain/ethereum.png'
-import { useAccount, useDisconnect } from 'wagmi'
-import { formatWalletHash } from '../../helpers'
-import { useState } from 'react'
-import Verified from '../../../public/images/verified-icon.svg'
-import { WarningAlert } from '../Alert/InfoAlert'
-import Keyring from '../../../public/images/compliance/key-ring.svg'
-import Quadrata from '../../../public/images/compliance/quadrata.png'
-import zkMe from '../../../public/images/compliance/zkMe.png'
-import ExternalLink from '../../../public/images/external-link-icon.svg'
-import Disconnect from '../../../public/images/disconnect-icon.svg'
-import { useComplianceCheck } from '../../hooks/keyring/hook'
-import { useQuadrata } from '../../hooks/quadrata/hook'
-import { useZkMe } from '../../hooks/zkme/hook'
-import { useToast } from '../../contexts/ToastContext/hooks'
-import { dappConfig } from '../../constants/featureConfig'
-import { ComplianceOnboardingVendor } from '../../types'
-import { complianceVendorConfig } from '../../constants/complianceConfig'
-import { ComplianceOnboardingButton } from '../Button/ComplianceOnboardingButton'
-import { AlignedRow } from '../Box/AlignedRow'
-import { ModalButton } from '../Button/ModalButton'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
 
 interface VerifyAddressCardProps {
   logout: () => void
@@ -40,8 +32,10 @@ export const VerifyAddressCard = ({
   verified,
   onVerify,
 }: VerifyAddressCardProps) => {
-  const { address, chainId } = useAccount()
+  const { address } = useAccount()
   const theme = useTheme()
+
+  const { chainId } = useChainContext()
 
   const { showPendingToast } = useToast()
 
@@ -91,7 +85,7 @@ export const VerifyAddressCard = ({
             variant='body-md'
             fontWeight='600'
           >
-            {formatWalletHash(address!)}
+            {address ? formatWalletHash(address) : ''}
           </Typography>
         </Stack>
 
