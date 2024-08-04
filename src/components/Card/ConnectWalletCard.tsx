@@ -4,7 +4,7 @@ import { ContentBox } from './CompliancePortal'
 import MetaMask from '../../../public/images/wallets/metamask.svg'
 import WalletConnect from '../../../public/images/wallets/walletconnect.svg'
 import CoinbaseWallet from '../../../public/images/wallets/coinbase.svg'
-import { coinbaseWallet, metaMask, walletConnect } from 'wagmi/connectors'
+import { coinbaseWallet, injected, metaMask, walletConnect } from 'wagmi/connectors'
 import Image from 'next/image'
 import { useAccount, useConnect } from 'wagmi'
 const connectButtons = [
@@ -12,7 +12,7 @@ const connectButtons = [
     id: 'metamask',
     name: 'MetaMask',
     icon: MetaMask,
-    connector: metaMask(),
+    connector: injected({ target: 'metaMask' }),
   },
   {
     id: 'walletconnect',

@@ -1,53 +1,46 @@
-import { Box, Button, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Button, CircularProgress, Stack, Typography, useTheme } from '@mui/material'
+import Image from 'next/image'
+import { useAccount } from 'wagmi'
+import Ethereum from '../../../public/images/chain/ethereum.png'
+import ExternalLink from '../../../public/images/external-link-icon.svg'
+import Verified from '../../../public/images/verified-icon.svg'
+import { complianceVendorConfig } from '../../constants/complianceConfig'
+import { dappConfig } from '../../constants/featureConfig'
+import { useToast } from '../../contexts/ToastContext/hooks'
+import { formatWalletHash } from '../../helpers'
+import { ComplianceOnboardingVendor } from '../../types'
+import { WarningAlert } from '../Alert/InfoAlert'
+import { AlignedRow } from '../Box/AlignedRow'
+import { ModalButton } from '../Button/ModalButton'
 import {
   ContentBox,
   StyledCard,
   StyledComplianceChip,
 } from './CompliancePortal'
-import Image from 'next/image'
-import Ethereum from '../../../public/images/chain/ethereum.png'
-import { useAccount, useDisconnect } from 'wagmi'
-import { formatWalletHash } from '../../helpers'
-import { useState } from 'react'
-import Verified from '../../../public/images/verified-icon.svg'
-import { WarningAlert } from '../Alert/InfoAlert'
-import Keyring from '../../../public/images/compliance/key-ring.svg'
-import Quadrata from '../../../public/images/compliance/quadrata.png'
-import zkMe from '../../../public/images/compliance/zkMe.png'
-import ExternalLink from '../../../public/images/external-link-icon.svg'
-import Disconnect from '../../../public/images/disconnect-icon.svg'
-import { useComplianceCheck } from '../../hooks/keyring/hook'
-import { useQuadrata } from '../../hooks/quadrata/hook'
-import { useZkMe } from '../../hooks/zkme/hook'
-import { useToast } from '../../contexts/ToastContext/hooks'
-import { dappConfig } from '../../constants/featureConfig'
-import { ComplianceOnboardingVendor } from '../../types'
-import { complianceVendorConfig } from '../../constants/complianceConfig'
-import { ComplianceOnboardingButton } from '../Button/ComplianceOnboardingButton'
-import { AlignedRow } from '../Box/AlignedRow'
-import { ModalButton } from '../Button/ModalButton'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
+import { useCompliance } from '../../hooks/useCompliance'
 
 interface VerifyAddressCardProps {
   logout: () => void
-  verifyAgain: () => void
-  verified: boolean
   onVerify: (vendor: ComplianceOnboardingVendor) => void
+  isLoading: boolean
+  isCompliant: boolean | undefined
+  onCheckCompliance: () => void
 }
 
 export const VerifyAddressCard = ({
   logout,
-  verifyAgain,
-  verified,
   onVerify,
+  isLoading,
+  isCompliant,
+  onCheckCompliance,
 }: VerifyAddressCardProps) => {
-  const { address, chainId } = useAccount()
+  const { address } = useAccount()
   const theme = useTheme()
 
-  const { showPendingToast } = useToast()
+  const { chainId } = useChainContext()
 
-  // const onSuccess = () => {
-  //   setIsVerified(true)
-  // }
+  const { showPendingToast } = useToast()
 
   return (
     <ContentBox
@@ -91,7 +84,7 @@ export const VerifyAddressCard = ({
             variant='body-md'
             fontWeight='600'
           >
-            {formatWalletHash(address!)}
+            {address ? formatWalletHash(address) : ''}
           </Typography>
         </Stack>
 
@@ -119,11 +112,34 @@ export const VerifyAddressCard = ({
         </Typography>
         <ModalButton
           title='Refresh'
-          onClick={verifyAgain}
+          onClick={onCheckCompliance}
         />
       </AlignedRow>
+      {isLoading ? (
+        <Box
+          padding='32px'
+          bgcolor='#3D4C44'
+          borderRadius='12px'
+          width='100%'
+          maxWidth='647px'
+        >
+          <Stack
+            gap='24px'
+            alignItems='center'
+          >
+            <CircularProgress />
 
-      {verified && (
+            <Typography
+              color='#77ED91'
+              fontSize='12px'
+              lineHeight='18px'
+              fontWeight='600'
+            >
+              Checking compliant status...
+            </Typography>
+          </Stack>
+        </Box>
+      ) : isCompliant ? (
         <Box
           padding='32px'
           bgcolor='#3D4C44'
@@ -152,20 +168,17 @@ export const VerifyAddressCard = ({
             </Typography>
           </Stack>
         </Box>
-      )}
-      {!verified && (
+      ) : (<>
         <Stack
           alignItems={'center'}
           borderRadius='4px'
         >
           <WarningAlert text='Your wallet address has not been verified yet, please verify your identity through KYC or KYB by choosing a platform below and verify again before you proceed!' />
         </Stack>
-      )}
-      {!verified &&
-        dappConfig[chainId!].complianceVendors.map(
+        {dappConfig[chainId!].complianceVendors.map(
           (
             vendor,
-            index // TODO: replace 1 with Chain id
+            index
           ) => (
             <StyledCard key={index}>
               <Stack
@@ -229,45 +242,10 @@ export const VerifyAddressCard = ({
                   />
                 </Stack>
               </Button>
-              {/* <Box width={'200px'}>
-                <ComplianceOnboardingButton
-                  loading={false}
-                  disabled={false}
-                  title={`Verify by ${complianceVendorConfig[vendor].name}`}
-                />
-              </Box> */}
             </StyledCard>
           )
         )}
-
-      {/* <Button
-        variant='contained'
-        sx={{
-          width: '100%',
-          height: '48px',
-          padding: '10px 20px',
-          lineHeight: '20px',
-          fontSize: '18px',
-          textTransform: 'uppercase',
-          borderRadius: '50px',
-          bgcolor: '#E4FBE9',
-        }}
-        onClick={logout}
-      >
-        <Stack
-          direction='row'
-          gap='8px'
-          alignItems='center'
-        >
-          <Image
-            src={Disconnect.src}
-            width={24}
-            height={24}
-            alt='disconnect-icon'
-          />
-          Disconnect
-        </Stack>
-      </Button> */}
+      </>)}
     </ContentBox>
   )
 }

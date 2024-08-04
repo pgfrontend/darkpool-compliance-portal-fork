@@ -1,22 +1,15 @@
 import { Box, ModalProps, Typography, useTheme } from '@mui/material'
+import Image from 'next/image'
 import React from 'react'
-import { supportedChains } from '../../constants/chains'
 import { ModalButton } from '../Button/ModalButton'
 import { BasicModal } from './BasicModal'
-import { useSwitchChain } from 'wagmi'
-import Image from 'next/image'
-import { useChainContext } from '../../contexts/ChainContext/hooks'
 
-export const LoadingComplianceModal: React.FC<ModalProps> = ({
+export const LoadingComplianceModal: React.FC<ModalProps & { doRefresh: () => void }> = ({
   open,
   onClose,
+  doRefresh,
 }) => {
   const theme = useTheme()
-  const { chainId } = useChainContext()
-
-  const doRefresh = () => {
-    window.location.reload()
-  }
 
   return (
     <BasicModal
@@ -63,8 +56,17 @@ export const LoadingComplianceModal: React.FC<ModalProps> = ({
               textAlign: 'center',
             }}
           >
-            The compliance portal is checking your account and please refresh
-            the page
+            Verification in progress...
+          </Typography>
+          <Typography
+            variant='h3'
+            color={theme.palette.common.white}
+            mb={1}
+            sx={{
+              textAlign: 'center',
+            }}
+          >
+            Refresh the page upon completion.
           </Typography>
         </Box>
 

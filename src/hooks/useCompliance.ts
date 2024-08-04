@@ -24,7 +24,7 @@ export const useComplianceCheck = (
     } else {
       setIsCompliant(undefined)
     }
-  }, [address])
+  }, [address, chainId])
 
   const onCheckCompliance = () => {
     if (address && ethers.utils.isAddress(address) && chainId) {

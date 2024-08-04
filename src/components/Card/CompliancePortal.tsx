@@ -1,45 +1,38 @@
-import React, { ReactNode, use, useEffect, useState } from 'react'
-import Image from 'next/image'
 import {
   Box,
-  Button,
   Card,
   Chip,
-  Stack,
   styled,
-  Typography,
-  useTheme,
+  Typography
 } from '@mui/material'
-import { WarningAlert } from '../Alert/InfoAlert'
+import React, { ReactNode, useEffect, useState } from 'react'
 
-import Ethereum from '../../../public/images/chain/ethereum.png'
 
-import ExternalLink from '../../../public/images/external-link-icon.svg'
-import Verified from '../../../public/images/verified-icon.svg'
-import { coinbaseWallet, metaMask, walletConnect } from 'wagmi/connectors'
-import { Connector, useAccount, useConnect, useDisconnect } from 'wagmi'
-import { formatWalletHash } from '../../helpers'
-import { set } from 'lodash'
-import { useComplianceCheck } from '../../hooks/keyring/hook'
+import { useModal } from '@keyringnetwork/frontend-sdk'
+import { useAccount, useDisconnect } from 'wagmi'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
+import { useToast } from '../../contexts/ToastContext/hooks'
+import { useCoinbaseEas } from '../../hooks/coinbaseEas/hook'
+import { useQuadrata } from '../../hooks/quadrata/hook'
+import { useCompliance } from '../../hooks/useCompliance'
+import { useZkMe } from '../../hooks/zkme/hook'
+import { ComplianceOnboardingVendor } from '../../types'
+import { LoadingComplianceModal } from '../Modal/LoadingComplianceModal'
 import { AnnounceCard } from './AnnounceCard'
 import { ConnectWalletCard } from './ConnectWalletCard'
 import { VerifyAddressCard } from './VerifyAddressCard'
-import { useCompliance } from '../../hooks/useCompliance'
-import { useToast } from '../../contexts/ToastContext/hooks'
-import { ComplianceOnboardingVendor } from '../../types'
-import { useModal } from '@keyringnetwork/frontend-sdk'
-import { useZkMe } from '../../hooks/zkme/hook'
-import { useChainContext } from '../../contexts/ChainContext/hooks'
-import { useQuadrata } from '../../hooks/quadrata/hook'
-import { LoadingComplianceModal } from '../Modal/LoadingComplianceModal'
-import { on } from 'events'
-import { useCoinbaseEas } from '../../hooks/coinbaseEas/hook'
+
+const StepEnum = {
+  NOT_CONNECTED: 1,
+  CONNECTING: 2,
+  CONNECTED: 3,
+}
+
 
 const CompliancePortal: React.FC = () => {
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(StepEnum.NOT_CONNECTED)
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
-  const [verified, setVerified] = useState(false)
 
   const { chainId } = useChainContext()
   const { isNotCompliant, isLoading, isCompliant, onCheckCompliance } =
@@ -52,32 +45,35 @@ const CompliancePortal: React.FC = () => {
   const [openInProgress, setOpenInProgress] = useState(false)
 
   const handleConnectButton = () => {
-    setStep(2)
-  }
-
-  const verifyAgain = () => {
-    setVerified(false)
+    setStep(StepEnum.CONNECTING)
   }
 
   const logout = () => {
     disconnect()
-    setStep(1)
+    setStep(StepEnum.NOT_CONNECTED)
+  }
+
+  const closeModalAndRefresh = async () => {
+    setOpenInProgress(false)
+    await onCheckCompliance()
   }
 
   useEffect(() => {
+    if (!isConnected) {
+      setStep(StepEnum.NOT_CONNECTED)
+    }
+
     if (address && isConnected) {
-      setStep(3)
+      setStep(StepEnum.CONNECTED)
     }
 
     if (isConnected && isCompliant) {
-      setVerified(true)
       setOpenInProgress(false)
     } else {
-      setVerified(false)
     }
 
     if (isLoading && isNotCompliant) {
-      showPendingToast(undefined, 'Compliance check in progress')
+      showPendingToast(undefined, 'Compliance checking')
     }
 
     if (!isLoading) {
@@ -107,6 +103,8 @@ const CompliancePortal: React.FC = () => {
   const { launchEas } = useCoinbaseEas()
 
   const onVerify = async (vendor: ComplianceOnboardingVendor) => {
+    setOpenInProgress(true)
+
     switch (vendor) {
       case ComplianceOnboardingVendor.KEYRING:
         openKeyringModal()
@@ -126,23 +124,22 @@ const CompliancePortal: React.FC = () => {
       default:
         return
     }
-
-    setOpenInProgress(true)
   }
 
   const complianceRender = () => {
     switch (step) {
-      case 1:
+      case StepEnum.NOT_CONNECTED:
         return <AnnounceCard onClick={handleConnectButton} />
-      case 2:
+      case StepEnum.CONNECTING:
         return <ConnectWalletCard />
-      case 3:
+      case StepEnum.CONNECTED:
         return (
           <VerifyAddressCard
             logout={logout}
-            verifyAgain={verifyAgain}
-            verified={verified}
             onVerify={onVerify}
+            isLoading={isLoading}
+            isCompliant={isCompliant}
+            onCheckCompliance={onCheckCompliance}
           />
         )
       default:
@@ -168,7 +165,8 @@ const CompliancePortal: React.FC = () => {
 
       <LoadingComplianceModal
         open={openInProgress && !showQuadrata}
-        onClose={() => {}}
+        onClose={() => { }}
+        doRefresh={closeModalAndRefresh}
       >
         <></>
       </LoadingComplianceModal>
