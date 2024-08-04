@@ -31,6 +31,8 @@ import { useModal } from '@keyringnetwork/frontend-sdk'
 import { useZkMe } from '../../hooks/zkme/hook'
 import { useChainContext } from '../../contexts/ChainContext/hooks'
 import { useQuadrata } from '../../hooks/quadrata/hook'
+import { LoadingComplianceModal } from '../Modal/LoadingComplianceModal'
+import { on } from 'events'
 import { useCoinbaseEas } from '../../hooks/coinbaseEas/hook'
 
 const CompliancePortal: React.FC = () => {
@@ -47,6 +49,7 @@ const CompliancePortal: React.FC = () => {
   const [showQuadrata, setShowQuadrata] = useState(false)
   const [quadrataAccessToken, setQuadrataAccessToken] = useState<string>()
   const [quadrataWidget, setQuadrataWidget] = useState<ReactNode>()
+  const [openInProgress, setOpenInProgress] = useState(false)
 
   const handleConnectButton = () => {
     setStep(2)
@@ -68,6 +71,7 @@ const CompliancePortal: React.FC = () => {
 
     if (isConnected && isCompliant) {
       setVerified(true)
+      setOpenInProgress(false)
     } else {
       setVerified(false)
     }
@@ -79,17 +83,21 @@ const CompliancePortal: React.FC = () => {
     if (!isLoading) {
       closeToast()
     }
-  }, [chainId, address, isConnected, isLoading])
+  }, [chainId, address, isConnected, isLoading, isCompliant])
 
   const onQuadrataClose = () => {
     console.log('Quadrata KYB widget closed')
     setShowQuadrata(false)
     setQuadrataAccessToken(undefined)
     setQuadrataWidget(undefined)
+    onCheckCompliance()
   }
 
   const { openModal: openKeyringModal } = useModal()
-  const { launchWidget: launchZKmeWidget } = useZkMe(address, chainId)
+  const { launchWidget: launchZKmeWidget, loading: zkLoading } = useZkMe(
+    address,
+    chainId
+  )
   const { getAccessToken, createQuadrataWidget } = useQuadrata(
     address,
     chainId,
@@ -119,7 +127,7 @@ const CompliancePortal: React.FC = () => {
         return
     }
 
-    onCheckCompliance()
+    setOpenInProgress(true)
   }
 
   const complianceRender = () => {
@@ -155,8 +163,15 @@ const CompliancePortal: React.FC = () => {
       {complianceRender()}
 
       {showQuadrata && quadrataAccessToken && quadrataWidget && (
-        <>{quadrataWidget}</>
+        <Box>{quadrataWidget}</Box>
       )}
+
+      <LoadingComplianceModal
+        open={openInProgress && !showQuadrata}
+        onClose={() => {}}
+      >
+        <></>
+      </LoadingComplianceModal>
     </StyledBox>
   )
 }
