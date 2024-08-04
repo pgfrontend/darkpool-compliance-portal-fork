@@ -9,6 +9,7 @@ const StyledModal = styled(Dialog)(({ theme }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        zIndex: 1049,
         '& .MuiDialog-paper': {
             padding: '32px',
             background: '#17181C',
