@@ -19,6 +19,7 @@ import {
 } from './CompliancePortal'
 import { useChainContext } from '../../contexts/ChainContext/hooks'
 import { useCompliance } from '../../hooks/useCompliance'
+import { supportedChains } from '../../constants/chains'
 
 interface VerifyAddressCardProps {
   logout: () => void
@@ -72,9 +73,10 @@ export const VerifyAddressCard = ({
           bgcolor='#576E63'
           borderRadius='100px'
           padding={'6px 8px'}
+          alignItems='center'
         >
           <Image
-            src={Ethereum.src}
+            src={supportedChains[chainId!].icon}
             width={18}
             height={18}
             alt='chain-icon'
@@ -127,15 +129,15 @@ export const VerifyAddressCard = ({
             gap='24px'
             alignItems='center'
           >
-            <CircularProgress />
+            <CircularProgress size={80} />
 
             <Typography
               color='#77ED91'
-              fontSize='12px'
+              fontSize='16px'
               lineHeight='18px'
               fontWeight='600'
             >
-              Checking compliant status...
+              Checking compliance status on {supportedChains[chainId!].name}...
             </Typography>
           </Stack>
         </Box>
@@ -160,11 +162,11 @@ export const VerifyAddressCard = ({
 
             <Typography
               color='#77ED91'
-              fontSize='12px'
+              fontSize='16px'
               lineHeight='18px'
               fontWeight='600'
             >
-              Your wallet address has been verified
+              Your wallet address is compliant on {supportedChains[chainId!].name}.
             </Typography>
           </Stack>
         </Box>

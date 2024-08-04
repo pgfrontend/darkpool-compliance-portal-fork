@@ -1,10 +1,11 @@
 import { KeyringProvider, KeyringWidget } from "@keyringnetwork/frontend-sdk"
 import { createContext } from "react"
-import { useAccount, useChainId } from "wagmi"
-import { getProviderByChainId } from "../../helpers"
+import { useAccount } from "wagmi"
 import { dappConfig } from "../../constants/featureConfig"
 import { keyringConfig } from "../../constants/keyringConfig"
-import { ComplianceOnboardingVendor, ComplianceOnboardingType } from "../../types"
+import { getProviderByChainId } from "../../helpers"
+import { ComplianceOnboardingType, ComplianceOnboardingVendor } from "../../types"
+import { useChainContext } from "../ChainContext/hooks"
 
 interface Props {
     children: React.ReactNode
@@ -19,7 +20,7 @@ export const ComplianceContext = createContext<ComplianceConfig>({
 const ComplianceProvider: React.FC<Props> = ({ children }) => {
 
     const { address, isConnected } = useAccount()
-    const chainId = useChainId()
+    const { chainId } = useChainContext()
 
     const isKeyringProvider = dappConfig[chainId].complianceType === ComplianceOnboardingType.SINGLE && dappConfig[chainId].complianceVendors.includes(ComplianceOnboardingVendor.KEYRING)
 

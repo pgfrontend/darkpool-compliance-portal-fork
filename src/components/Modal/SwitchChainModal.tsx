@@ -64,7 +64,7 @@ export const SwitchChainModal: React.FC<ModalProps> = ({
               textAlign: 'center',
             }}
           >
-            Sorry, we don't support this chain at the moment. Please switch to {supportedChains[chainId].name}
+            Switch the network: {supportedChains[chainId].name}
           </Typography>
         </Box>
 

@@ -4,6 +4,7 @@ import Navbar from '../Navigation/Navbar'
 import { useAccount } from 'wagmi'
 import { chainsConfig } from '../../constants'
 import { SwitchChainModal } from '../Modal/SwitchChainModal'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
 
 interface Props {
   children?: React.ReactNode
@@ -15,8 +16,9 @@ const Layout: React.FC<Props> = ({ children, title }) => {
   const [toogle, setToogle] = useState<number>(Date.now())
 
   const { isConnected, chainId } = useAccount()
+  const { chainId: currentChain } = useChainContext()
   const needSwitchChain =
-    isConnected && chainId && !chainsConfig.supportedChains.includes(chainId)
+    isConnected && chainId && (currentChain != chainId || !chainsConfig.supportedChains.includes(chainId))
   const [switchModalOpen, setSwitchModalOpen] = React.useState(false)
 
   useEffect(() => {
@@ -80,7 +82,7 @@ const Layout: React.FC<Props> = ({ children, title }) => {
       </Box>
       <SwitchChainModal
         open={switchModalOpen}
-        onClose={() => {}}
+        onClose={() => { }}
       >
         <></>
       </SwitchChainModal>
