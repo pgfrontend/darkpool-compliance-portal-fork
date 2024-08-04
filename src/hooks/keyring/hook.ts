@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { isAddressCompliance } from "../../services/keyringService";
 import { useChainContext } from "../../contexts/ChainContext/hooks";
+import { isAddressCompliance } from "../../services/complianceService";
 
 
 export const useComplianceCheck = (address: string) => {

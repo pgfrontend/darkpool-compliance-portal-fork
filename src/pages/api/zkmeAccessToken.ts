@@ -1,13 +1,17 @@
 import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { zkMeConfig } from '../../constants/zkmeConfig'
+import { getZkMeConfigByChainId } from '../../constants/zkmeConfig';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
     try {
+        const chainId = request.query.chainId as string;
         const apiKey = process.env.ZKME_APIKEY
+        const apiKeyTransactional = process.env.ZKME_APIKEY_BB
 
+        const zkMeConfig = getZkMeConfigByChainId(parseInt(chainId));
+        console.log("============",zkMeConfig)
         const res = await axios.post('https://nest-api.zk.me/api/token/get', {
-            apiKey,
+            apiKey: zkMeConfig.isMint ? apiKey : apiKeyTransactional,
             appId: zkMeConfig.APP_ID,
             apiModePermission: zkMeConfig.apiModePermission,
             lv: zkMeConfig.lv,

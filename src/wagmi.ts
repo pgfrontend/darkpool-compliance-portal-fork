@@ -1,6 +1,6 @@
 import { http, createConfig } from 'wagmi'
 import { arbitrum, polygon, base, hardhat, mainnet, sepolia, Chain } from 'wagmi/chains'
-import { coinbaseWallet, metaMask, walletConnect } from 'wagmi/connectors'
+import { coinbaseWallet, injected, metaMask, walletConnect } from 'wagmi/connectors'
 import { chainsConfig, config } from "./constants/config";
 import { ChainId } from './types';
 import { Transport, defineChain } from 'viem';
@@ -19,8 +19,8 @@ const hardhatArbitrum = defineChain({
 })
 
 const hardhatPolygon = defineChain({
-    id: ChainId.HARDHAT_POLYGON,
-    name: 'Hardhat Polygon',
+    id: ChainId.HARDHAT_BASE,
+    name: 'Hardhat Base',
     nativeCurrency: {
         decimals: 18,
         name: 'Ether',
@@ -60,14 +60,14 @@ const bounceBitMainnet = defineChain({
 const wagmiChainIdMapping: Record<number, Chain> = {
     [ChainId.MAINNET]: mainnet,
     [ChainId.SEPOLIA]: sepolia,
-    [ChainId.ARBITRUM_ONE]: arbitrum,
     [ChainId.POLYGON]: polygon,
     [ChainId.BASE]: base,
     [ChainId.BounceBit]: bounceBitMainnet,
     [ChainId.BounceBitTestnet]: bounceBitTestnet,
     [ChainId.HARDHAT]: hardhat,
-    [ChainId.HARDHAT_POLYGON]: hardhatPolygon,
+    [ChainId.HARDHAT_BASE]: hardhatPolygon,
     [ChainId.HARDHAT_ARBITRUM]: hardhatArbitrum,
+    [ChainId.ARBITRUM_ONE]: arbitrum,
 }
 
 const supportedWagmiChains = chainsConfig.supportedChains.map((chainId) => wagmiChainIdMapping[chainId])
@@ -83,7 +83,7 @@ const rpcMapToTransport = (rpcMap: Record<number, string>) => {
 export const wagmiConfig = createConfig({
     chains: [supportedWagmiChains[0],...supportedWagmiChains.slice(1)],
     connectors: [
-        metaMask(),
+        injected({ target: 'metaMask' }),
         coinbaseWallet({ appName: 'Singularity' }),
         walletConnect({
             projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID ?? '',
