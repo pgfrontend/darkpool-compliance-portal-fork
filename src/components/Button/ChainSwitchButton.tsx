@@ -51,7 +51,6 @@ export const ChainSwitchButton: React.FC = () => {
 
     const handleSwitchChain = async (chainId: number) => {
         if (isChainIdParamExists()) {
-            console.log("here it is")
             await router.push('/');
         }
         await switchChainAsync({ chainId })
@@ -63,12 +62,6 @@ export const ChainSwitchButton: React.FC = () => {
     const currentChainConfig = supportedChains[currentChainId]
 
     const isCurrentChainSupported = chainsConfig.supportedChains.includes(currentChainId)
-
-    useEffect(() => {
-        if (currentChainId && isConnected && chainId && currentChainId !== chainId) {
-            switchChainAsync({ chainId: currentChainId })
-        }
-    }, [currentChainId, isConnected, chainId])
 
     return (
         <Box>

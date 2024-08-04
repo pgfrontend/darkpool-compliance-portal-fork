@@ -1,12 +1,13 @@
 import { Button, Stack, Typography } from '@mui/material'
 import { ContentBox } from './CompliancePortal'
 
+import Image from 'next/image'
+import { useConnect } from 'wagmi'
+import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors'
+import CoinbaseWallet from '../../../public/images/wallets/coinbase.svg'
 import MetaMask from '../../../public/images/wallets/metamask.svg'
 import WalletConnect from '../../../public/images/wallets/walletconnect.svg'
-import CoinbaseWallet from '../../../public/images/wallets/coinbase.svg'
-import { coinbaseWallet, injected, metaMask, walletConnect } from 'wagmi/connectors'
-import Image from 'next/image'
-import { useAccount, useConnect } from 'wagmi'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
 const connectButtons = [
   {
     id: 'metamask',
@@ -32,7 +33,7 @@ const connectButtons = [
 ]
 
 export const ConnectWalletCard = () => {
-  const { chainId } = useAccount()
+  const { chainId } = useChainContext()
   const { connect } = useConnect()
   return (
     <ContentBox
