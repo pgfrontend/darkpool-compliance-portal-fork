@@ -1,6 +1,6 @@
 import { http, createConfig } from 'wagmi'
 import { arbitrum, polygon, base, hardhat, mainnet, sepolia, Chain } from 'wagmi/chains'
-import { coinbaseWallet, metaMask, walletConnect } from 'wagmi/connectors'
+import { coinbaseWallet, injected, metaMask, walletConnect } from 'wagmi/connectors'
 import { chainsConfig, config } from "./constants/config";
 import { ChainId } from './types';
 import { Transport, defineChain } from 'viem';
@@ -83,7 +83,7 @@ const rpcMapToTransport = (rpcMap: Record<number, string>) => {
 export const wagmiConfig = createConfig({
     chains: [supportedWagmiChains[0],...supportedWagmiChains.slice(1)],
     connectors: [
-        metaMask(),
+        injected({ target: 'metaMask' }),
         coinbaseWallet({ appName: 'Singularity' }),
         walletConnect({
             projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID ?? '',
