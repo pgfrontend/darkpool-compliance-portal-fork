@@ -1,27 +1,10 @@
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import { useChainContext } from "../../contexts/ChainContext/hooks";
-import { isAddressCompliance } from "../../services/complianceService";
+import { keyringConfig } from "../../constants/keyringConfig";
 
+export const useKeyring = (chainId: number) => {
 
-export const useComplianceCheck = (address: string) => {
+    const launchKeyring = () => {
+        window.open(keyringConfig[chainId], '_blank')
+    }
 
-    const [loading, setLoading] = useState(false);
-    const [isCompliant, setIsCompliant] = useState(false);
-    const { chainId } = useChainContext();
-
-    useEffect(() => {
-        if (address && ethers.utils.isAddress(address)) {
-            setLoading(true);
-            isAddressCompliance(address, chainId).then((isCompliant) => {
-                setIsCompliant(isCompliant);
-            }).finally(() => {
-                setLoading(false);
-            });
-        } else {
-            setIsCompliant(false);
-        }
-    }, [address]);
-
-    return { loading, isCompliant };
+    return { launchKeyring };
 }

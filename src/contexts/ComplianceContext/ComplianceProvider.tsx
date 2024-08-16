@@ -1,11 +1,4 @@
-import { KeyringProvider, KeyringWidget } from "@keyringnetwork/frontend-sdk"
 import { createContext } from "react"
-import { useAccount } from "wagmi"
-import { dappConfig } from "../../constants/featureConfig"
-import { keyringConfig } from "../../constants/keyringConfig"
-import { getProviderByChainId } from "../../helpers"
-import { ComplianceOnboardingType, ComplianceOnboardingVendor } from "../../types"
-import { useChainContext } from "../ChainContext/hooks"
 
 interface Props {
     children: React.ReactNode
@@ -18,35 +11,12 @@ export const ComplianceContext = createContext<ComplianceConfig>({
 })
 
 const ComplianceProvider: React.FC<Props> = ({ children }) => {
-
-    const { address, isConnected } = useAccount()
-    const { chainId } = useChainContext()
-
-    const isKeyringProvider = dappConfig[chainId].complianceType === ComplianceOnboardingType.SINGLE && dappConfig[chainId].complianceVendors.includes(ComplianceOnboardingVendor.KEYRING)
-
-    const showWidget = address && isConnected && isKeyringProvider
-
-    if (dappConfig[chainId].complianceType === ComplianceOnboardingType.SINGLE && isKeyringProvider) {
-        return (
-            <ComplianceContext.Provider value={{}}>
-                <KeyringProvider config={keyringConfig[chainId]}>
-                    {children}
-                    {showWidget && (
-                        <KeyringWidget
-                            address={address}
-                            chainId={chainId}
-                            provider={getProviderByChainId(chainId)}
-                        />
-                    )}
-                </KeyringProvider>
-            </ComplianceContext.Provider>
-        )
-    } else
-        return (
-            <ComplianceContext.Provider value={{}}>
-                {children}
-            </ComplianceContext.Provider>
-        )
+    
+    return (
+        <ComplianceContext.Provider value={{}}>
+            {children}
+        </ComplianceContext.Provider>
+    )
 }
 
 export default ComplianceProvider
