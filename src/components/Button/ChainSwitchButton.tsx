@@ -4,19 +4,19 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import { Box, Menu, MenuItem, Stack, Typography } from "@mui/material"
 import Image from 'next/image'
-import { useEffect, useState } from "react"
+import { useRouter } from "next/router"
+import { useState } from "react"
 import { useAccount, useSwitchChain } from "wagmi"
 import { chainsConfig } from "../../constants"
 import { supportedChains } from "../../constants/chains"
 import { useChainContext } from "../../contexts/ChainContext/hooks"
-import { useRouter } from "next/router"
 
 
 export const ChainSwitchButton: React.FC = () => {
 
     const router = useRouter();
     const { switchChainAsync } = useSwitchChain()
-    const { isConnected, chainId } = useAccount()
+    const { isConnected } = useAccount()
     const { chainId: currentChainId } = useChainContext()
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -50,9 +50,15 @@ export const ChainSwitchButton: React.FC = () => {
     }
 
     const handleSwitchChain = async (chainId: number) => {
-        if (isChainIdParamExists()) {
-            await router.push('/');
+        if (!isConnected) {
+            const newParams = { ...router.query, chain: chainId };
+            router.push({ query: newParams }, undefined, { shallow: true });
+        } else {
+            if (isChainIdParamExists()) {
+                await router.push('/');
+            }
         }
+
         await switchChainAsync({ chainId })
         handleClose()
     }
