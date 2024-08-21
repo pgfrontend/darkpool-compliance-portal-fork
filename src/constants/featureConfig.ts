@@ -8,7 +8,7 @@ export type DAppConfig = {
 
 export const dappConfig: { [chainId: number]: DAppConfig } = {
     [ChainId.MAINNET]: {
-        complianceType: ComplianceOnboardingType.SINGLE,
+        complianceType: ComplianceOnboardingType.COMBO,
         complianceVendors: [ComplianceOnboardingVendor.KEYRING],
     },
     [ChainId.ARBITRUM_ONE]: {
@@ -17,7 +17,7 @@ export const dappConfig: { [chainId: number]: DAppConfig } = {
     },
     [ChainId.BASE]: {
         complianceType: ComplianceOnboardingType.COMBO,
-        complianceVendors: [ComplianceOnboardingVendor.ZKME, ComplianceOnboardingVendor.QUADRATA],
+        complianceVendors: [ComplianceOnboardingVendor.COINBASE_EAS, ComplianceOnboardingVendor.ZKME, ComplianceOnboardingVendor.QUADRATA],
     },
     [ChainId.BounceBit]: {
         complianceType: ComplianceOnboardingType.COMBO,
@@ -32,7 +32,7 @@ export const dappConfig: { [chainId: number]: DAppConfig } = {
         complianceVendors: [ComplianceOnboardingVendor.ZKME],
     },
     [ChainId.HARDHAT]: {
-        complianceType: ComplianceOnboardingType.SINGLE,
+        complianceType: ComplianceOnboardingType.COMBO,
         complianceVendors: [ComplianceOnboardingVendor.KEYRING],
     },
     [ChainId.HARDHAT_ARBITRUM]: {

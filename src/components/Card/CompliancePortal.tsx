@@ -8,7 +8,6 @@ import {
 import React, { ReactNode, useEffect, useState } from 'react'
 
 
-import { useModal } from '@keyringnetwork/frontend-sdk'
 import { useAccount, useDisconnect } from 'wagmi'
 import { useChainContext } from '../../contexts/ChainContext/hooks'
 import { useToast } from '../../contexts/ToastContext/hooks'
@@ -21,6 +20,7 @@ import { LoadingComplianceModal } from '../Modal/LoadingComplianceModal'
 import { AnnounceCard } from './AnnounceCard'
 import { ConnectWalletCard } from './ConnectWalletCard'
 import { VerifyAddressCard } from './VerifyAddressCard'
+import { useKeyring } from '../../hooks/keyring/hook'
 
 const StepEnum = {
   NOT_CONNECTED: 1,
@@ -89,7 +89,6 @@ const CompliancePortal: React.FC = () => {
     onCheckCompliance()
   }
 
-  const { openModal: openKeyringModal } = useModal()
   const { launchWidget: launchZKmeWidget, loading: zkLoading } = useZkMe(
     address,
     chainId
@@ -102,12 +101,14 @@ const CompliancePortal: React.FC = () => {
 
   const { launchEas } = useCoinbaseEas()
 
+  const { launchKeyring } = useKeyring(chainId)
+
   const onVerify = async (vendor: ComplianceOnboardingVendor) => {
     setOpenInProgress(true)
 
     switch (vendor) {
       case ComplianceOnboardingVendor.KEYRING:
-        openKeyringModal()
+        launchKeyring()
         break
       case ComplianceOnboardingVendor.ZKME:
         await launchZKmeWidget()

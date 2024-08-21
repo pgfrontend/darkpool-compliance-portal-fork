@@ -2,7 +2,7 @@ import { NetworkConfig, ChainId } from '../types'
 
 export const networkConfig: { [chainId: number]: NetworkConfig } = {
   [ChainId.MAINNET]: {
-    complianceManager: '0x630aD89523a18fA30F752297F3F53B7BC363488b',
+    complianceManager: '0x2633F1725eF69082c6f56806249a5d9281b0b8D4',
     darkpoolAssetManager: '0x159F3668c72BBeCdF1fb31beeD606Ec9649654eB',
     explorerUrl: {
       tx: 'https://etherscan.io/tx/',
