@@ -19,6 +19,15 @@ export const networkConfig: { [chainId: number]: NetworkConfig } = {
       block: 'https://arbiscan.io/block/',
     },
   },
+  [ChainId.BASE]: {
+    complianceManager: '0x34091B8BD5B12fDA9541ABedD5C2A2715e9249d1',
+    darkpoolAssetManager: '0x84eb120A35802460484015e6748375369e40468a',
+    explorerUrl: {
+      tx: 'https://basescan.org/tx/',
+      address: 'https://basescan.org/address/',
+      block: 'https://basescan.org/block/',
+    },
+  },
   [ChainId.BounceBit]: {
     complianceManager: '0x6c3Fac202241F3c6B19EBCa043091E3aab21F3F2',
     darkpoolAssetManager: '0x3bd7150667975E10010d8043Bfb98Ccc28808CFb',
