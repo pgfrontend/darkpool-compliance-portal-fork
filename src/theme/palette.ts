@@ -16,6 +16,8 @@ interface OtherColorTypes {
   primary: {
     p200: string
     p50: string
+    p950: string
+    p800: string
   }
   neutral: {
     n950: string
@@ -76,6 +78,8 @@ const palette: PaletteOptions | undefined = {
     primary: {
       p200: '#347F44',
       p50: '#1D5A2B',
+      p950: '#E4FBE9',
+      p800: '#C9F8D3',
     },
     neutral: {
       n950: '#FFFFFF',

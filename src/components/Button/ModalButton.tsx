@@ -2,6 +2,7 @@ import {
   Button,
   CircularProgress,
   Stack,
+  SxProps,
   Typography,
   styled,
   useTheme,
@@ -20,6 +21,7 @@ interface ModalButtonProps {
   disabled?: boolean
   loading?: boolean
   title: string
+  sx?: SxProps
 }
 
 export const ModalButton: React.FC<ModalButtonProps> = ({
@@ -27,18 +29,84 @@ export const ModalButton: React.FC<ModalButtonProps> = ({
   disabled = false,
   loading = false,
   title,
+  sx,
 }) => {
   const theme = useTheme()
 
   return (
-    <StyledModalButton onClick={onClick} disableRipple disabled={disabled}>
-      <Stack alignItems={'center'} justifyContent={'center'} direction={'row'}>
-        {loading && <CircularProgress size={20} sx={{ marginRight: '10px' }} />}
+    <StyledModalButton
+      onClick={onClick}
+      disableRipple
+      disabled={disabled}
+      sx={sx}
+    >
+      <Stack
+        alignItems={'center'}
+        justifyContent={'center'}
+        direction={'row'}
+      >
+        {loading && (
+          <CircularProgress
+            size={20}
+            sx={{ marginRight: '10px' }}
+          />
+        )}
       </Stack>{' '}
-      <Typography variant="button" color={theme.palette.secondary.main}>
+      <Typography
+        variant='button'
+        color={theme.palette.secondary.main}
+      >
         {title}
       </Typography>
     </StyledModalButton>
+  )
+}
+
+export const StyledModalOutlineButton = styled(Button)(({ theme }) => {
+  return {
+    color: theme.palette.secondary.main,
+    background: theme.palette.other.primary.p800,
+    border: `1px solid ${theme.palette.primary.main}`,
+    padding: '12px 20px',
+    height: '48px',
+  }
+})
+
+export const ModalOutlineButton: React.FC<ModalButtonProps> = ({
+  onClick,
+  disabled = false,
+  loading = false,
+  title,
+  sx,
+}) => {
+  const theme = useTheme()
+
+  return (
+    <StyledModalOutlineButton
+      onClick={onClick}
+      disableRipple
+      disabled={disabled}
+      sx={sx}
+    >
+      <Stack
+        alignItems={'center'}
+        justifyContent={'center'}
+        direction={'row'}
+      >
+        {loading && (
+          <CircularProgress
+            size={20}
+            sx={{ marginRight: '10px' }}
+          />
+        )}
+      </Stack>{' '}
+      <Typography
+        variant='button'
+        color={theme.palette.secondary.main}
+      >
+        {title}
+      </Typography>
+    </StyledModalOutlineButton>
   )
 }
 
