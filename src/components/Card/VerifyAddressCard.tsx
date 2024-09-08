@@ -53,9 +53,9 @@ export const VerifyAddressCard = ({
 
   return (
     <ContentBox
-      maxWidth='720px'
       gap='24px'
       alignItems='flex-start!important'
+      maxWidth={isCompliant ? '720px' : '1100px'}
     >
       <Typography
         fontSize='24px'
@@ -117,7 +117,6 @@ export const VerifyAddressCard = ({
           bgcolor='#3D4C44'
           borderRadius='12px'
           width='100%'
-          maxWidth='647px'
         >
           <Stack
             gap='24px'
@@ -138,7 +137,10 @@ export const VerifyAddressCard = ({
       ) : isCompliant ? (
         <CompliantCard onCheckCompliance={onCheckCompliance} />
       ) : (
-        <NotCompliantCard onVerify={onVerify} />
+        <NotCompliantCard
+          onVerify={onVerify}
+          onCheckCompliance={onCheckCompliance}
+        />
       )}
     </ContentBox>
   )

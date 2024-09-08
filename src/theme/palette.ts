@@ -26,6 +26,7 @@ interface OtherColorTypes {
     n500: string
     n700: string
     n50: string
+    n100: string
   }
 }
 
@@ -88,6 +89,7 @@ const palette: PaletteOptions | undefined = {
       n500: '#A4C0B2',
       n700: '#D1DFD9',
       n50: '#2F3C35',
+      n100: '#3D4C44',
     },
   },
   action: {
