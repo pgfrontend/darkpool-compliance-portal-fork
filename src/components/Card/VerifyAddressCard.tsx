@@ -28,6 +28,7 @@ import { useCompliance } from '../../hooks/useCompliance'
 import { supportedChains } from '../../constants/chains'
 import { NotCompliantCard } from './NotCompliantCard'
 import { CompliantCard } from './CompliantCard'
+import { useAccessToken } from '../../hooks/useAccessToken'
 
 interface VerifyAddressCardProps {
   logout: () => void
@@ -48,8 +49,15 @@ export const VerifyAddressCard = ({
   const theme = useTheme()
 
   const { chainId } = useChainContext()
-
   const { showPendingToast } = useToast()
+  const {
+    isAuthorized,
+    loading,
+    onAddSignature,
+    onBridgeSignature,
+    mintLoading,
+    bridgeLoading,
+  } = useAccessToken()
 
   return (
     <ContentBox
@@ -135,7 +143,15 @@ export const VerifyAddressCard = ({
           </Stack>
         </Box>
       ) : isCompliant ? (
-        <CompliantCard onCheckCompliance={onCheckCompliance} />
+        <CompliantCard
+          loading={loading}
+          onCheckCompliance={onCheckCompliance}
+          onMintToken={onAddSignature}
+          onBridgeToken={onBridgeSignature}
+          mintLoading={mintLoading}
+          bridgeLoading={bridgeLoading}
+          isAuthorized={isAuthorized}
+        />
       ) : (
         <NotCompliantCard
           onVerify={onVerify}

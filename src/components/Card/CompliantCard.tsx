@@ -11,14 +11,38 @@ import {
 } from '../Button/ModalButton'
 import theme from '../../theme'
 import { SuccessAlert, WarningAlert } from '../Alert/InfoAlert'
+import { NetworkDropdown } from '../Dropdowns/NetworkDropdown'
+import { useState } from 'react'
 
 interface CompliantCardProps {
+  loading: boolean
   onCheckCompliance: () => void
+  onMintToken: () => void
+  onBridgeToken: (sourceChainId: number) => void
+  mintLoading: boolean
+  bridgeLoading: boolean
+  isAuthorized: boolean
 }
 
-export const CompliantCard = ({ onCheckCompliance }: CompliantCardProps) => {
-  const { chainId } = useChainContext()
+export const CompliantCard = ({
+  loading,
+  onCheckCompliance,
+  onMintToken,
+  onBridgeToken,
+  mintLoading,
+  bridgeLoading,
+  isAuthorized,
+}: CompliantCardProps) => {
+  const [sourceChainId, setSourceChainId] = useState<number>(0)
   const theme = useTheme()
+
+  const onSelectSourceChain = (chainId: number) => {
+    setSourceChainId(chainId)
+  }
+
+  const onBridge = () => {
+    onBridgeToken(sourceChainId)
+  }
   return (
     <Stack
       spacing={theme.spacing(4)}
@@ -47,99 +71,110 @@ export const CompliantCard = ({ onCheckCompliance }: CompliantCardProps) => {
           Mint access token
         </Typography>
 
-        {/* Haven't mint token access */}
-        <Stack spacing={theme.spacing(1)}>
-          <WarningAlert
-            text={`You currently do not have an access token. An access token is required to proceed with accessing our platform’s features and services. You can either choose to mint a access token or`}
-          />
+        {!isAuthorized ? ( // Haven't mint token access
+          <Stack spacing={theme.spacing(1)}>
+            <WarningAlert
+              text={`You currently do not have an access token. An access token is required to proceed with accessing our platform’s features and services. You can either choose to mint a access token or`}
+            />
 
-          <Box
-            sx={{
-              background: 'white',
-              padding: '16px',
-              borderRadius: '12px',
-              width: '100%',
-            }}
-          >
-            <Stack
+            <Box
               sx={{
-                width: '100%',
-                background: theme.palette.other.primary.p950,
-                padding: '54px 12px',
+                background: 'white',
+                padding: '16px',
                 borderRadius: '12px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '1px dashed rgba(56, 78, 183, 0.30)',
+                width: '100%',
               }}
             >
-              <ModalButton
-                title='Mint access token'
-                onClick={() => {}}
+              <Stack
                 sx={{
                   width: '100%',
+                  background: theme.palette.other.primary.p950,
+                  padding: '54px 12px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '1px dashed rgba(56, 78, 183, 0.30)',
                 }}
-              />
+              >
+                <ModalButton
+                  title='Mint access token'
+                  loading={mintLoading}
+                  onClick={onMintToken}
+                  sx={{
+                    width: '100%',
+                  }}
+                />
 
-              <ModalOutlineButton
-                title='Bridge from another chain'
-                onClick={() => {}}
-                sx={{
-                  width: '100%',
-                }}
-              />
-            </Stack>
-          </Box>
-        </Stack>
-
-        {/* Minted token */}
-        <Box
-          sx={{
-            background: theme.palette.other.neutral.n50,
-            padding: '24px',
-            borderRadius: '12px',
-            border: '1px solid rgba(61, 76, 68, 0.00)',
-          }}
-        >
+                <Stack
+                  direction={'row'}
+                  justifyContent={'space-between'}
+                  width={'100%'}
+                  spacing={theme.spacing(2)}
+                >
+                  <NetworkDropdown onSelect={onSelectSourceChain} />
+                  <ModalOutlineButton
+                    title='Bridge from another chain'
+                    loading={bridgeLoading}
+                    onClick={onBridge}
+                    sx={{
+                      width: '100%',
+                    }}
+                  />
+                </Stack>
+              </Stack>
+            </Box>
+          </Stack>
+        ) : (
+          // Minted token
           <Box
             sx={{
-              background: theme.palette.other.primary.p950,
-              padding: '12px 20px',
+              background: theme.palette.other.neutral.n50,
+              padding: '24px',
               borderRadius: '12px',
-              border: `1px solid ${theme.palette.primary.main}`,
+              border: '1px solid rgba(61, 76, 68, 0.00)',
             }}
           >
-            <AlignedRow width={'100%'}>
-              <Typography
-                variant='body-sm'
-                fontWeight={600}
-                color='black'
-              >
-                Access Token name
-              </Typography>
-              <Stack
-                direction={'row'}
-                spacing={theme.spacing(0.5)}
-                alignItems={'center'}
-              >
-                <Image
-                  src='/images/time-icon.svg'
-                  alt='time'
-                  width={18}
-                  height={18}
-                />
+            <Box
+              sx={{
+                background: theme.palette.other.primary.p950,
+                padding: '12px 20px',
+                borderRadius: '12px',
+                border: `1px solid ${theme.palette.primary.main}`,
+              }}
+            >
+              <AlignedRow width={'100%'}>
                 <Typography
                   variant='body-sm'
+                  fontWeight={600}
                   color='black'
                 >
-                  Validate until <b>25th Dec 2021</b>
+                  Access Token name
                 </Typography>
-              </Stack>
-            </AlignedRow>
+                <Stack
+                  direction={'row'}
+                  spacing={theme.spacing(0.5)}
+                  alignItems={'center'}
+                >
+                  <Image
+                    src='/images/time-icon.svg'
+                    alt='time'
+                    width={18}
+                    height={18}
+                  />
+                  <Typography
+                    variant='body-sm'
+                    color='black'
+                  >
+                    Validate until <b>25th Dec 2021</b>
+                  </Typography>
+                </Stack>
+              </AlignedRow>
+            </Box>
           </Box>
-        </Box>
+        )}
       </Stack>
     </Stack>
   )

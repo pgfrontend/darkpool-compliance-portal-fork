@@ -48,7 +48,7 @@ export const ModalButton: React.FC<ModalButtonProps> = ({
         {loading && (
           <CircularProgress
             size={20}
-            sx={{ marginRight: '10px' }}
+            sx={{ marginRight: '10px', color: theme.palette.other.primary.p50 }}
           />
         )}
       </Stack>{' '}

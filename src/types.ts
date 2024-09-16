@@ -10,7 +10,6 @@ export class DarkpoolError extends Error {
 
 export type HexData = `0x${string}`
 
-
 export type Config = {
   chainId: number
   supportedChains: number[]
@@ -33,7 +32,6 @@ export type NetworkConfig = {
   }
 }
 
-
 export enum ChainId {
   HARDHAT = 31337,
   HARDHAT_ARBITRUM = 31338,
@@ -52,7 +50,6 @@ export enum ChainId {
   BounceBitTestnet = 6000,
 }
 
-
 export enum ComplianceOnboardingType {
   SINGLE = 1,
   COMBO = 2,
@@ -63,4 +60,42 @@ export enum ComplianceOnboardingVendor {
   ZKME = 2,
   QUADRATA = 3,
   COINBASE_EAS = 4,
+}
+
+export interface AddSignatureRequest {
+  receiverAddress: string // address of wallet receiving AT
+  expiresAt: number // expiration timestamp in seconds
+  targetChainId: number // chain id where AT will be minted
+}
+
+export interface AddSignatureResponse {
+  signature: string
+  receiverAddress: string
+  expiresAt: number
+  targetChainId: number
+}
+
+export interface BridgeSignatureRequest {
+  receiverAddress: string // address of wallet receiving AT
+  expiresAt: number // expiration timestamp in seconds
+  targetChainId: number // chain id where AT will be minted
+  sourceChainId: number // chain id from where AT will be imported
+}
+
+export interface BridgeSignatureResponse {
+  signature: string
+  receiverAddress: string
+  expiresAt: number
+  targetChainId: number
+  sourceChainId: number
+}
+
+export interface GetStatusRequest {
+  walletAddress: string // address of AT holder
+  targetChainId: number // chain id where to check AT status
+}
+
+export interface GetStatusResponse {
+  status: boolean // boolean, show if AT is active
+  expiresAt: number // shows the expiration time of AT
 }
