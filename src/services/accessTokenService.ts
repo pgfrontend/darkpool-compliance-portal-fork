@@ -21,3 +21,20 @@ export const mintService = async (
 
   return tx
 }
+
+export const bridgeService = async (
+  receiver: string,
+  expiresAt: number,
+  bridgedFromChainId: number,
+  signature: string,
+  chainId: ChainId
+) => {
+  const tx = await writeContract(wagmiConfig, {
+    address: accessTokenConfig[chainId].contractAddress as `0x${string}`,
+    abi: accessTokenAbi,
+    functionName: 'mintBridged',
+    args: [receiver, expiresAt, bridgedFromChainId, signature],
+  })
+
+  return tx
+}

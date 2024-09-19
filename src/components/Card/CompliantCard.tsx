@@ -20,7 +20,6 @@ import { formatWalletHash } from '../../helpers'
 import { useAccount } from 'wagmi'
 
 interface CompliantCardProps {
-  loading: boolean
   onCheckCompliance: () => void
   onMintToken: () => void
   onBridgeToken: (sourceChainId: number) => void
@@ -31,7 +30,6 @@ interface CompliantCardProps {
 }
 
 export const CompliantCard = ({
-  loading,
   onCheckCompliance,
   onMintToken,
   onBridgeToken,
@@ -145,7 +143,7 @@ export const CompliantCard = ({
           </Stack>
         ) : (
           // Minted token
-          <Stack>
+          <Stack spacing={theme.spacing(1)}>
             <SuccessAlert text='The access token has been successfully minted' />
 
             <Box

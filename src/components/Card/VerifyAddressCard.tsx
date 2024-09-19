@@ -52,7 +52,7 @@ export const VerifyAddressCard = ({
   const { showPendingToast } = useToast()
   const {
     isAuthorized,
-    loading,
+
     onAddSignature,
     onBridgeSignature,
     mintLoading,
@@ -145,7 +145,6 @@ export const VerifyAddressCard = ({
         </Box>
       ) : isCompliant ? (
         <CompliantCard
-          loading={loading}
           onCheckCompliance={onCheckCompliance}
           onMintToken={onAddSignature}
           onBridgeToken={onBridgeSignature}

@@ -11,7 +11,7 @@ import {
   GetStatusResponse,
 } from '../types'
 import { useToast } from '../contexts/ToastContext/hooks'
-import { mintService } from '../services/accessTokenService'
+import { bridgeService, mintService } from '../services/accessTokenService'
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -23,7 +23,6 @@ export interface AccessToken {
 }
 
 export const useAccessToken = () => {
-  const [loading, setLoading] = useState(true)
   const { address, chainId } = useAccount()
   const [error, setError] = useState<string | null>(null)
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
@@ -47,7 +46,7 @@ export const useAccessToken = () => {
       return
     }
     setMintLoading(true)
-    showPendingToast(undefined, 'Adding signature...')
+    showPendingToast(undefined, 'Creating signature...')
     try {
       const response = await axios({
         method: 'POST',
@@ -71,9 +70,7 @@ export const useAccessToken = () => {
         chainId
       )
 
-      console.log('tx', tx)
-
-      showSuccessToast('Signature added successfully')
+      showSuccessToast(tx, 'Signature added successfully')
       setIsAuthorized(true)
       setExpiresAt(accessToken.body.expiresAt)
     } catch (error: any) {
@@ -108,6 +105,7 @@ export const useAccessToken = () => {
       }
 
       setIsAuthorized(token.body.accessToken.status)
+      setExpiresAt(token.body.accessToken.expiresAt)
       showSuccessToast(undefined, 'Compliance status checked successfully')
     } catch (error: any) {
       console.error('Error checking compliance status:', error)
@@ -124,7 +122,7 @@ export const useAccessToken = () => {
       return
     }
     setBridgeLoading(true)
-    showPendingToast(undefined, 'Importing token...')
+    showPendingToast(undefined, 'Bridging token...')
     try {
       const response = await axios({
         method: 'POST',
@@ -142,9 +140,17 @@ export const useAccessToken = () => {
         throw new Error('Access token is null')
       }
 
+      const tx = await bridgeService(
+        address,
+        parseInt(accessToken.body.expiresAt),
+        sourceChainId,
+        accessToken.body.signature,
+        chainId
+      )
+
       setIsAuthorized(true)
       setExpiresAt(accessToken.body.expiresAt)
-      showSuccessToast('Bridge signature successfully')
+      showSuccessToast(tx, 'Bridge signature successfully')
     } catch (error: any) {
       console.error(error)
       setError(error.message)
@@ -156,7 +162,6 @@ export const useAccessToken = () => {
   }
 
   return {
-    loading,
     onAddSignature,
     onGetStatus,
     onBridgeSignature,
