@@ -38,7 +38,7 @@ export const CompliantCard = ({
   isAuthorized,
   accessToken,
 }: CompliantCardProps) => {
-  const [sourceChainId, setSourceChainId] = useState<number>(0)
+  const [sourceChainId, setSourceChainId] = useState<number>(1) // Default to Ethereum
   const theme = useTheme()
 
   const onSelectSourceChain = (chainId: number) => {

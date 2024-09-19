@@ -68,7 +68,7 @@ export const useAccessToken = () => {
     } catch (error: any) {
       console.error(error)
       setError(error.message)
-      showWarningToast(error.message)
+      showWarningToast(undefined, error.message)
     } finally {
       closeToast()
       setMintLoading(false)
@@ -112,7 +112,7 @@ export const useAccessToken = () => {
     try {
       const response = await axios({
         method: 'POST',
-        url: `${BACKEND_URL}/api/token/signature`,
+        url: `${BACKEND_URL}/api/token/signature/bridge`,
         data: {
           receiverAddress: address, // address of wallet receiving AT
           targetChainId: chainId.toString(), // chain id where AT will be minted
@@ -120,11 +120,15 @@ export const useAccessToken = () => {
         } as BridgeSignatureRequest,
       })
 
-      showSuccessToast('Token imported successfully')
-      return response.data as BridgeSignatureResponse
+      const accessToken = response.data as BridgeSignatureResponse
+
+      showSuccessToast('Bridge signature successfully')
+      setIsAuthorized(true)
+      setAccessToken(accessToken.body)
     } catch (error: any) {
       console.error(error)
       setError(error.message)
+      showWarningToast(undefined, error.message)
     } finally {
       closeToast()
       setBridgeLoading(false)
