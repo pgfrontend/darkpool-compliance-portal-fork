@@ -12,18 +12,33 @@ import { ModalButton } from '../Button/ModalButton'
 import { backgrounds, borderRadius } from 'polished'
 import { NetworkDropdown } from '../Dropdowns/NetworkDropdown'
 import RefreshIcon from '@mui/icons-material/Refresh'
+import { useState } from 'react'
 
 interface NotCompliantCardProps {
   onVerify: (vendor: ComplianceOnboardingVendor) => void
   onCheckCompliance: () => void
+  onBridgeToken: (sourceChainId: number) => void
 }
 
 export const NotCompliantCard = ({
   onVerify,
   onCheckCompliance,
+  onBridgeToken,
 }: NotCompliantCardProps) => {
   const { chainId } = useAccount()
   const theme = useTheme()
+  const [sourceChainId, setSourceChainId] = useState<number | null>(null)
+
+  const onSelectSourceChain = (chainId: number) => {
+    setSourceChainId(chainId)
+  }
+
+  const onBridge = () => {
+    if (sourceChainId) {
+      onBridgeToken(sourceChainId)
+    }
+  }
+
   return (
     <Grid
       container
@@ -210,11 +225,11 @@ export const NotCompliantCard = ({
                 Select another chain
               </Typography>
 
-              <NetworkDropdown />
+              <NetworkDropdown onSelect={onSelectSourceChain} />
 
               <ModalButton
                 title='Bridge'
-                onClick={() => {}}
+                onClick={onBridge}
                 sx={{ width: '100%' }}
               />
             </Box>

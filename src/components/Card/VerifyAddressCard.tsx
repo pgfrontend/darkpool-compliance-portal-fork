@@ -154,6 +154,7 @@ export const VerifyAddressCard = ({
         />
       ) : (
         <NotCompliantCard
+          onBridgeToken={onBridgeSignature}
           onVerify={onVerify}
           onCheckCompliance={onCheckCompliance}
         />
