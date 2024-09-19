@@ -14,6 +14,13 @@ import { useToast } from '../contexts/ToastContext/hooks'
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
+export interface AccessToken {
+  signature: string
+  receiverAddress: string
+  expiresAt: string
+  targetChainId: string
+}
+
 export const useAccessToken = () => {
   const [loading, setLoading] = useState(true)
   const { address, chainId } = useAccount()
@@ -21,6 +28,7 @@ export const useAccessToken = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
   const [mintLoading, setMintLoading] = useState<boolean>(false)
   const [bridgeLoading, setBridgeLoading] = useState<boolean>(false)
+  const [accessToken, setAccessToken] = useState<AccessToken | null>(null)
 
   const { showPendingToast, closeToast, showSuccessToast, showWarningToast } =
     useToast()
@@ -52,8 +60,11 @@ export const useAccessToken = () => {
         } as AddSignatureRequest,
       })
 
+      const accessToken = response.data as AddSignatureResponse
+
       showSuccessToast('Signature added successfully')
-      return response.data as AddSignatureResponse
+      setIsAuthorized(true)
+      setAccessToken(accessToken.body)
     } catch (error: any) {
       console.error(error)
       setError(error.message)
@@ -129,5 +140,6 @@ export const useAccessToken = () => {
     isAuthorized,
     mintLoading,
     bridgeLoading,
+    accessToken,
   }
 }

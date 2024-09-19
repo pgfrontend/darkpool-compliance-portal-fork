@@ -57,6 +57,7 @@ export const VerifyAddressCard = ({
     onBridgeSignature,
     mintLoading,
     bridgeLoading,
+    accessToken,
   } = useAccessToken()
 
   return (
@@ -151,6 +152,7 @@ export const VerifyAddressCard = ({
           mintLoading={mintLoading}
           bridgeLoading={bridgeLoading}
           isAuthorized={isAuthorized}
+          accessToken={accessToken}
         />
       ) : (
         <NotCompliantCard

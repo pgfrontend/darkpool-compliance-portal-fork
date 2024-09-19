@@ -12,7 +12,10 @@ import {
 import theme from '../../theme'
 import { SuccessAlert, WarningAlert } from '../Alert/InfoAlert'
 import { NetworkDropdown } from '../Dropdowns/NetworkDropdown'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { AccessToken } from '../../hooks/useAccessToken'
+import { formatAddress } from '../../utils/formatAddress'
+import { format } from 'date-fns'
 
 interface CompliantCardProps {
   loading: boolean
@@ -22,6 +25,7 @@ interface CompliantCardProps {
   mintLoading: boolean
   bridgeLoading: boolean
   isAuthorized: boolean
+  accessToken: AccessToken | null
 }
 
 export const CompliantCard = ({
@@ -32,6 +36,7 @@ export const CompliantCard = ({
   mintLoading,
   bridgeLoading,
   isAuthorized,
+  accessToken,
 }: CompliantCardProps) => {
   const [sourceChainId, setSourceChainId] = useState<number>(0)
   const theme = useTheme()
@@ -43,6 +48,11 @@ export const CompliantCard = ({
   const onBridge = () => {
     onBridgeToken(sourceChainId)
   }
+
+  const expiresAt = useMemo(() => {
+    if (!accessToken) return ''
+    return format(new Date(+accessToken.expiresAt * 1000), 'PPP')
+  }, [accessToken])
   return (
     <Stack
       spacing={theme.spacing(4)}
@@ -71,7 +81,7 @@ export const CompliantCard = ({
           Mint access token
         </Typography>
 
-        {!isAuthorized ? ( // Haven't mint token access
+        {!isAuthorized || !accessToken ? ( // Haven't mint token access
           <Stack spacing={theme.spacing(1)}>
             <WarningAlert
               text={`You currently do not have an access token. An access token is required to proceed with accessing our platform’s features and services. You can either choose to mint a access token or`}
@@ -151,7 +161,7 @@ export const CompliantCard = ({
                   fontWeight={600}
                   color='black'
                 >
-                  Access Token name
+                  {formatAddress(accessToken.receiverAddress)}
                 </Typography>
                 <Stack
                   direction={'row'}
@@ -168,7 +178,7 @@ export const CompliantCard = ({
                     variant='body-sm'
                     color='black'
                   >
-                    Validate until <b>25th Dec 2021</b>
+                    Validate until <b>{expiresAt}</b>
                   </Typography>
                 </Stack>
               </AlignedRow>
