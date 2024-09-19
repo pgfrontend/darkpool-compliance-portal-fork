@@ -21,22 +21,22 @@ const networks = [
   },
   {
     name: 'Arbitrum',
-    chainId: 1,
+    chainId: 42161,
     image: '/images/chain/arbitrum.svg',
   },
   {
     name: 'Base',
-    chainId: 1,
+    chainId: 8453,
     image: '/images/chain/base.svg',
   },
   {
     name: 'BounceBit',
-    chainId: 1,
+    chainId: 1024,
     image: '/images/chain/bouncebit.svg',
   },
   {
     name: 'Polygon',
-    chainId: 37,
+    chainId: 137,
     image: '/images/chain/polygon.svg',
   },
 ]
