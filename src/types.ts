@@ -64,38 +64,57 @@ export enum ComplianceOnboardingVendor {
 
 export interface AddSignatureRequest {
   receiverAddress: string // address of wallet receiving AT
-  expiresAt: number // expiration timestamp in seconds
-  targetChainId: number // chain id where AT will be minted
+  targetChainId: string // chain id where AT will be minted
 }
 
 export interface AddSignatureResponse {
-  signature: string
-  receiverAddress: string
-  expiresAt: number
-  targetChainId: number
+  statusCode: number
+  path: string
+  timestamp: string
+  success: boolean
+  error: string | null
+  body: {
+    signature: string
+    receiverAddress: string
+    expiresAt: string
+    targetChainId: string
+  } | null
 }
 
 export interface BridgeSignatureRequest {
   receiverAddress: string // address of wallet receiving AT
-  expiresAt: number // expiration timestamp in seconds
-  targetChainId: number // chain id where AT will be minted
-  sourceChainId: number // chain id from where AT will be imported
+  targetChainId: string // chain id where AT will be minted
+  sourceChainId: string // chain id from where AT will be imported
 }
 
 export interface BridgeSignatureResponse {
-  signature: string
-  receiverAddress: string
-  expiresAt: number
-  targetChainId: number
-  sourceChainId: number
+  statusCode: number
+  path: string
+  timestamp: string
+  success: boolean
+  error: string | null
+  body: {
+    signature: string
+    receiverAddress: string
+    expiresAt: string
+    targetChainId: string
+    sourceChainId: string
+  } | null
 }
 
 export interface GetStatusRequest {
   walletAddress: string // address of AT holder
-  targetChainId: number // chain id where to check AT status
+  targetChainId: string // chain id where to check AT status
 }
 
 export interface GetStatusResponse {
-  status: boolean // boolean, show if AT is active
-  expiresAt: number // shows the expiration time of AT
+  statusCode: number
+  path: string
+  timestamp: string
+  success: boolean
+  error: string | null
+  body: {
+    status: boolean
+    expiresAt: string
+  } | null
 }

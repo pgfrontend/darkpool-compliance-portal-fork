@@ -3,11 +3,16 @@ import { url } from 'inspector'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 import {
+  AddSignatureRequest,
   AddSignatureResponse,
+  BridgeSignatureRequest,
   BridgeSignatureResponse,
+  GetStatusRequest,
   GetStatusResponse,
 } from '../types'
 import { useToast } from '../contexts/ToastContext/hooks'
+
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
 export const useAccessToken = () => {
   const [loading, setLoading] = useState(true)
@@ -23,24 +28,28 @@ export const useAccessToken = () => {
   useEffect(() => {
     if (address && chainId) {
       onGetStatus().then((res) => {
-        if (res) {
-          setIsAuthorized(res.status)
+        if (res && res.body) {
+          setIsAuthorized(res.body.status)
         }
       })
     }
   }, [address, chainId])
 
   const onAddSignature = async () => {
+    if (!address || !chainId) {
+      setError('Address or chainId is undefined')
+      return
+    }
     setMintLoading(true)
     showPendingToast(undefined, 'Adding signature...')
     try {
       const response = await axios({
         method: 'POST',
-        url: 'api/token/signature',
+        url: `${BACKEND_URL}/api/token/signature/mint`,
         data: {
           receiverAddress: address,
-          expiresAt: Math.floor(Date.now() / 1000), // Current date in seconds
-        },
+          targetChainId: chainId.toString(),
+        } as AddSignatureRequest,
       })
 
       showSuccessToast('Signature added successfully')
@@ -56,15 +65,19 @@ export const useAccessToken = () => {
   }
 
   const onGetStatus = async () => {
+    if (!address || !chainId) {
+      setError('Address or chainId is undefined')
+      return
+    }
     try {
       showPendingToast(undefined, 'Checking compliance status...')
       const response = await axios({
         method: 'GET',
-        url: 'api/token/status',
-        data: {
+        url: `${BACKEND_URL}/api/token/status`,
+        params: {
           walletAddress: address,
-          targetChainId: chainId!,
-        },
+          targetChainId: chainId.toString(),
+        } as GetStatusRequest,
       })
 
       showSuccessToast(undefined, 'Compliance status checked successfully')
@@ -79,20 +92,24 @@ export const useAccessToken = () => {
   }
 
   const onBridgeSignature = async (sourceChainId: number) => {
+    if (!address || !chainId) {
+      setError('Address or chainId is undefined')
+      return
+    }
     setBridgeLoading(true)
     showPendingToast(undefined, 'Importing token...')
     try {
       const response = await axios({
         method: 'POST',
-        url: 'api/token/signature',
+        url: `${BACKEND_URL}/api/token/signature`,
         data: {
           receiverAddress: address, // address of wallet receiving AT
-          expiresAt: Math.floor(Date.now() / 1000), // expiration timestamp in seconds
-          targetChainId: chainId!, // chain id where AT will be minted
-          sourceChainId, // chain id from where AT will be imported
-        },
+          targetChainId: chainId.toString(), // chain id where AT will be minted
+          sourceChainId: sourceChainId.toString(), // chain id from where AT will be imported
+        } as BridgeSignatureRequest,
       })
 
+      showSuccessToast('Token imported successfully')
       return response.data as BridgeSignatureResponse
     } catch (error: any) {
       console.error(error)
