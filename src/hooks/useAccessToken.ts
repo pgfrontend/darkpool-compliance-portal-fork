@@ -11,6 +11,7 @@ import {
   GetStatusResponse,
 } from '../types'
 import { useToast } from '../contexts/ToastContext/hooks'
+import { mintService } from '../services/accessTokenService'
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -28,18 +29,15 @@ export const useAccessToken = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
   const [mintLoading, setMintLoading] = useState<boolean>(false)
   const [bridgeLoading, setBridgeLoading] = useState<boolean>(false)
-  const [accessToken, setAccessToken] = useState<AccessToken | null>(null)
+
+  const [expiresAt, setExpiresAt] = useState<string | null>(null)
 
   const { showPendingToast, closeToast, showSuccessToast, showWarningToast } =
     useToast()
 
   useEffect(() => {
     if (address && chainId) {
-      onGetStatus().then((res) => {
-        if (res && res.body) {
-          setIsAuthorized(res.body.status)
-        }
-      })
+      onGetStatus()
     }
   }, [address, chainId])
 
@@ -62,9 +60,22 @@ export const useAccessToken = () => {
 
       const accessToken = response.data as AddSignatureResponse
 
+      if (!accessToken.body) {
+        throw new Error('Access token is null')
+      }
+
+      const tx = await mintService(
+        address,
+        parseInt(accessToken.body.expiresAt),
+        accessToken.body.signature,
+        chainId
+      )
+
+      console.log('tx', tx)
+
       showSuccessToast('Signature added successfully')
       setIsAuthorized(true)
-      setAccessToken(accessToken.body)
+      setExpiresAt(accessToken.body.expiresAt)
     } catch (error: any) {
       console.error(error)
       setError(error.message)
@@ -91,8 +102,13 @@ export const useAccessToken = () => {
         } as GetStatusRequest,
       })
 
+      const token = response.data as GetStatusResponse
+      if (!token.body) {
+        throw new Error('Token is null')
+      }
+
+      setIsAuthorized(token.body.accessToken.status)
       showSuccessToast(undefined, 'Compliance status checked successfully')
-      return response.data as GetStatusResponse
     } catch (error: any) {
       console.error('Error checking compliance status:', error)
       setError(error.message)
@@ -122,9 +138,13 @@ export const useAccessToken = () => {
 
       const accessToken = response.data as BridgeSignatureResponse
 
-      showSuccessToast('Bridge signature successfully')
+      if (!accessToken.body) {
+        throw new Error('Access token is null')
+      }
+
       setIsAuthorized(true)
-      setAccessToken(accessToken.body)
+      setExpiresAt(accessToken.body.expiresAt)
+      showSuccessToast('Bridge signature successfully')
     } catch (error: any) {
       console.error(error)
       setError(error.message)
@@ -144,6 +164,6 @@ export const useAccessToken = () => {
     isAuthorized,
     mintLoading,
     bridgeLoading,
-    accessToken,
+    expiresAt,
   }
 }

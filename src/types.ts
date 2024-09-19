@@ -114,7 +114,9 @@ export interface GetStatusResponse {
   success: boolean
   error: string | null
   body: {
-    status: boolean
-    expiresAt: string
+    accessToken: {
+      status: boolean
+      expiresAt: string
+    }
   } | null
 }

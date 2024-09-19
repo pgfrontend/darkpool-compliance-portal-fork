@@ -14,8 +14,10 @@ import { SuccessAlert, WarningAlert } from '../Alert/InfoAlert'
 import { NetworkDropdown } from '../Dropdowns/NetworkDropdown'
 import { useMemo, useState } from 'react'
 import { AccessToken } from '../../hooks/useAccessToken'
-import { formatAddress } from '../../utils/formatAddress'
+
 import { format } from 'date-fns'
+import { formatWalletHash } from '../../helpers'
+import { useAccount } from 'wagmi'
 
 interface CompliantCardProps {
   loading: boolean
@@ -25,7 +27,7 @@ interface CompliantCardProps {
   mintLoading: boolean
   bridgeLoading: boolean
   isAuthorized: boolean
-  accessToken: AccessToken | null
+  expiresAt: string | null
 }
 
 export const CompliantCard = ({
@@ -36,23 +38,27 @@ export const CompliantCard = ({
   mintLoading,
   bridgeLoading,
   isAuthorized,
-  accessToken,
+  expiresAt,
 }: CompliantCardProps) => {
   const [sourceChainId, setSourceChainId] = useState<number>(1) // Default to Ethereum
   const theme = useTheme()
+  const { chainId, address } = useAccount()
 
   const onSelectSourceChain = (chainId: number) => {
     setSourceChainId(chainId)
   }
 
   const onBridge = () => {
-    onBridgeToken(sourceChainId)
+    if (!chainId) return
+    if (sourceChainId !== chainId) {
+      onBridgeToken(sourceChainId)
+    }
   }
 
-  const expiresAt = useMemo(() => {
-    if (!accessToken) return ''
-    return format(new Date(+accessToken.expiresAt * 1000), 'PPP')
-  }, [accessToken])
+  const formatExpiresAt = useMemo(() => {
+    if (!expiresAt) return format(new Date(), 'PPP')
+    return format(new Date(+expiresAt * 1000), 'PPP')
+  }, [expiresAt])
   return (
     <Stack
       spacing={theme.spacing(4)}
@@ -81,7 +87,7 @@ export const CompliantCard = ({
           Mint access token
         </Typography>
 
-        {!isAuthorized || !accessToken ? ( // Haven't mint token access
+        {!isAuthorized ? ( // Haven't mint token access
           <Stack spacing={theme.spacing(1)}>
             <WarningAlert
               text={`You currently do not have an access token. An access token is required to proceed with accessing our platform’s features and services. You can either choose to mint a access token or`}
@@ -139,51 +145,55 @@ export const CompliantCard = ({
           </Stack>
         ) : (
           // Minted token
-          <Box
-            sx={{
-              background: theme.palette.other.neutral.n50,
-              padding: '24px',
-              borderRadius: '12px',
-              border: '1px solid rgba(61, 76, 68, 0.00)',
-            }}
-          >
+          <Stack>
+            <SuccessAlert text='The access token has been successfully minted' />
+
             <Box
               sx={{
-                background: theme.palette.other.primary.p950,
-                padding: '12px 20px',
+                background: theme.palette.other.neutral.n50,
+                padding: '24px',
                 borderRadius: '12px',
-                border: `1px solid ${theme.palette.primary.main}`,
+                border: '1px solid rgba(61, 76, 68, 0.00)',
               }}
             >
-              <AlignedRow width={'100%'}>
-                <Typography
-                  variant='body-sm'
-                  fontWeight={600}
-                  color='black'
-                >
-                  {formatAddress(accessToken.receiverAddress)}
-                </Typography>
-                <Stack
-                  direction={'row'}
-                  spacing={theme.spacing(0.5)}
-                  alignItems={'center'}
-                >
-                  <Image
-                    src='/images/time-icon.svg'
-                    alt='time'
-                    width={18}
-                    height={18}
-                  />
+              <Box
+                sx={{
+                  background: theme.palette.other.primary.p950,
+                  padding: '12px 20px',
+                  borderRadius: '12px',
+                  border: `1px solid ${theme.palette.primary.main}`,
+                }}
+              >
+                <AlignedRow width={'100%'}>
                   <Typography
                     variant='body-sm'
+                    fontWeight={600}
                     color='black'
                   >
-                    Validate until <b>{expiresAt}</b>
+                    {formatWalletHash(address as `0x${string}`)}
                   </Typography>
-                </Stack>
-              </AlignedRow>
+                  <Stack
+                    direction={'row'}
+                    spacing={theme.spacing(0.5)}
+                    alignItems={'center'}
+                  >
+                    <Image
+                      src='/images/time-icon.svg'
+                      alt='time'
+                      width={18}
+                      height={18}
+                    />
+                    <Typography
+                      variant='body-sm'
+                      color='black'
+                    >
+                      Validate until <b>{formatExpiresAt}</b>
+                    </Typography>
+                  </Stack>
+                </AlignedRow>
+              </Box>
             </Box>
-          </Box>
+          </Stack>
         )}
       </Stack>
     </Stack>

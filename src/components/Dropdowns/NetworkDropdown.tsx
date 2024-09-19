@@ -39,6 +39,16 @@ const networks = [
     chainId: 137,
     image: '/images/chain/polygon.svg',
   },
+  {
+    name: 'Hardhat',
+    chainId: 31337,
+    image: '/images/chain/ethereum.png',
+  },
+  {
+    name: 'Hardhat Arb',
+    chainId: 31338,
+    image: '/images/chain/ethereum.png',
+  },
 ]
 
 export const NetworkDropdown = ({ onSelect }: NetworkDropdownProps) => {
