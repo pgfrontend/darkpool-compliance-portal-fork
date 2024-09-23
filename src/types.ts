@@ -76,6 +76,7 @@ export interface AddSignatureResponse {
   body: {
     signature: string
     receiverAddress: string
+    signatureExpiresAt: string
     expiresAt: string
     targetChainId: string
   } | null
@@ -99,6 +100,7 @@ export interface BridgeSignatureResponse {
     expiresAt: string
     targetChainId: string
     sourceChainId: string
+    signatureExpiresAt: string
   } | null
 }
 

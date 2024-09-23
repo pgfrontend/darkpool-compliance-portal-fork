@@ -2,10 +2,10 @@ import { ChainId } from '../types'
 
 export const accessTokenConfig = {
   [ChainId.HARDHAT]: {
-    contractAddress: '0x716473Fb4E7cD49c7d1eC7ec6d7490A03d9dA332',
+    contractAddress: '0x64079a2Edd1104a2323E2b732A1244BCE011B1F5',
   },
   [ChainId.HARDHAT_ARBITRUM]: {
-    contractAddress: '0xa3F8716040f3eDfD012632c2299d3601eB6B56f6',
+    contractAddress: '0x6808f44a003FF74390Ea500429593D682F7e0Db1',
   },
   [ChainId.HARDHAT_BASE]: {
     contractAddress: '0x716473Fb4E7cD49c7d1eC7ec6d7490A03d9dA332',
