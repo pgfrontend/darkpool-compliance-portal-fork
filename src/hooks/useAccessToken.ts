@@ -79,8 +79,8 @@ export const useAccessToken = () => {
       setError(error.message)
       showWarningToast(undefined, error.message)
     } finally {
-      // closeToast()
-      // setMintLoading(false)
+      closeToast()
+      setMintLoading(false)
     }
   }
 
