@@ -73,4 +73,13 @@ export const networkConfig: { [chainId: number]: NetworkConfig } = {
       block: 'https://arbiscan.io/block/',
     },
   },
+  [ChainId.HARDHAT_ARBITRUM]: {
+    complianceManager: '0x70bDA08DBe07363968e9EE53d899dFE48560605B',
+    darkpoolAssetManager: '0x045857BDEAE7C1c7252d611eB24eB55564198b4C',
+    explorerUrl: {
+      tx: 'https://arbiscan.io/tx/',
+      address: 'https://arbiscan.io/address/',
+      block: 'https://arbiscan.io/block/',
+    },
+  },
 }

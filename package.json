@@ -25,6 +25,7 @@
     "axios": "^1.6.0",
     "bignumber.js": "^9.1.2",
     "classnames": "^2.3.2",
+    "date-fns": "^4.1.0",
     "ethers": "5.7.2",
     "lodash": "^4.17.21",
     "next": "13.3.1",
