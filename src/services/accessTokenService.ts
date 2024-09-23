@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import { ChainId } from '../types'
-import { abi as accessTokenAbi } from '../abis/AccessPortal.json'
+import accessPortalAbi from '../abis/accessPortal.abi'
 import { accessTokenConfig } from '../constants/accessTokenConfig'
 
 import { wagmiConfig } from '../wagmi'
@@ -10,16 +10,27 @@ export const mintService = async (
   receiver: string,
   expiresAt: number,
   signature: string,
+  signatureExpiresAt: number,
   chainId: ChainId
 ) => {
-  const tx = await writeContract(wagmiConfig, {
-    address: accessTokenConfig[chainId].contractAddress as `0x${string}`,
-    abi: accessTokenAbi,
-    functionName: 'mint',
-    args: [receiver, expiresAt, signature],
-  })
+  try {
+    const tx = await writeContract(wagmiConfig, {
+      address: accessTokenConfig[chainId].contractAddress as `0x${string}`,
+      abi: accessPortalAbi,
+      functionName: 'mint',
+      args: [
+        receiver as `0x${string}`,
+        BigInt(expiresAt),
+        BigInt(signatureExpiresAt),
+        signature as `0x${string}`,
+      ],
+    })
 
-  return tx
+    return tx
+  } catch (error) {
+    console.error('Error minting access token', error)
+    throw error
+  }
 }
 
 export const bridgeService = async (
@@ -27,14 +38,26 @@ export const bridgeService = async (
   expiresAt: number,
   bridgedFromChainId: number,
   signature: string,
+  signatureExpiresAt: number,
   chainId: ChainId
 ) => {
-  const tx = await writeContract(wagmiConfig, {
-    address: accessTokenConfig[chainId].contractAddress as `0x${string}`,
-    abi: accessTokenAbi,
-    functionName: 'mintBridged',
-    args: [receiver, expiresAt, bridgedFromChainId, signature],
-  })
+  try {
+    const tx = await writeContract(wagmiConfig, {
+      address: accessTokenConfig[chainId].contractAddress as `0x${string}`,
+      abi: accessPortalAbi,
+      functionName: 'mintBridged',
+      args: [
+        receiver as `0x${string}`,
+        BigInt(expiresAt),
+        BigInt(bridgedFromChainId),
+        BigInt(signatureExpiresAt),
+        signature as `0x${string}`,
+      ],
+    })
 
-  return tx
+    return tx
+  } catch (error) {
+    console.error('Error bridging access token', error)
+    throw error
+  }
 }

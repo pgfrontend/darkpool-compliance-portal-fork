@@ -67,6 +67,7 @@ export const useAccessToken = () => {
         address,
         parseInt(accessToken.body.expiresAt),
         accessToken.body.signature,
+        parseInt(accessToken.body.signatureExpiresAt),
         chainId
       )
 
@@ -74,7 +75,7 @@ export const useAccessToken = () => {
       setIsAuthorized(true)
       setExpiresAt(accessToken.body.expiresAt)
     } catch (error: any) {
-      console.error(error)
+      console.error(error.message)
       setError(error.message)
       showWarningToast(undefined, error.message)
     } finally {
@@ -145,6 +146,7 @@ export const useAccessToken = () => {
         parseInt(accessToken.body.expiresAt),
         sourceChainId,
         accessToken.body.signature,
+        parseInt(accessToken.body.signatureExpiresAt),
         chainId
       )
 
