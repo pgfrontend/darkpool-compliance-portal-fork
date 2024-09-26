@@ -1,10 +1,8 @@
-import { ethers } from 'ethers'
 import { ChainId } from '../types'
 import accessPortalAbi from '../abis/accessPortal.abi'
-import { accessTokenConfig } from '../constants/accessTokenConfig'
-
 import { wagmiConfig } from '../wagmi'
 import { writeContract } from '@wagmi/core'
+import { networkConfig } from '../constants/networkConfig'
 
 export const mintService = async (
   receiver: string,
@@ -15,7 +13,7 @@ export const mintService = async (
 ) => {
   try {
     const tx = await writeContract(wagmiConfig, {
-      address: accessTokenConfig[chainId].contractAddress as `0x${string}`,
+      address: networkConfig[chainId].accessPortal as `0x${string}`,
       abi: accessPortalAbi,
       functionName: 'mint',
       args: [
@@ -43,7 +41,7 @@ export const bridgeService = async (
 ) => {
   try {
     const tx = await writeContract(wagmiConfig, {
-      address: accessTokenConfig[chainId].contractAddress as `0x${string}`,
+      address: networkConfig[chainId].accessPortal as `0x${string}`,
       abi: accessPortalAbi,
       functionName: 'mintBridged',
       args: [

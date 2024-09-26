@@ -23,6 +23,7 @@ export type ChainConfig = {
 }
 
 export type NetworkConfig = {
+  accessPortal: HexData
   complianceManager: HexData
   darkpoolAssetManager: HexData
   explorerUrl: {

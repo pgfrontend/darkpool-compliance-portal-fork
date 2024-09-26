@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { url } from 'inspector'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 import {
