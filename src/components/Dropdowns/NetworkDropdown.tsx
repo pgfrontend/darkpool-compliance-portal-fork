@@ -2,64 +2,30 @@ import { Box, Stack, Typography, useTheme } from '@mui/material'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
+import { chainsConfig } from '../../constants'
+import { supportedChains } from '../../constants/chains'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 
 interface NetworkDropdownProps {
   onSelect?: (chainId: number) => void
 }
 
-interface Network {
-  name: string
-  chainId: number
-  image: string
-}
-
-const networks = [
-  {
-    name: 'Ethereum',
-    chainId: 1,
-    image: '/images/chain/ethereum.png',
-  },
-  {
-    name: 'Arbitrum',
-    chainId: 42161,
-    image: '/images/chain/arbitrum.svg',
-  },
-  {
-    name: 'Base',
-    chainId: 8453,
-    image: '/images/chain/base.svg',
-  },
-  {
-    name: 'BounceBit',
-    chainId: 1024,
-    image: '/images/chain/bouncebit.svg',
-  },
-  {
-    name: 'Polygon',
-    chainId: 137,
-    image: '/images/chain/polygon.svg',
-  },
-  {
-    name: 'Hardhat',
-    chainId: 31337,
-    image: '/images/chain/ethereum.png',
-  },
-  {
-    name: 'Hardhat Arb',
-    chainId: 31338,
-    image: '/images/chain/ethereum.png',
-  },
-]
-
 export const NetworkDropdown = ({ onSelect }: NetworkDropdownProps) => {
-  const [network, setNetwork] = useState<Network>(networks[0])
   const [open, setOpen] = useState(false)
   const theme = useTheme()
   const ref = useRef(null)
+  const { chainId } = useChainContext()
 
-  const onChangeNetwork = (network: Network) => {
-    setNetwork(network)
-    onSelect && onSelect(network.chainId)
+  const [network, setNetwork] = useState<number>(chainId)
+
+  const currentChainConfig = supportedChains[network]
+
+  const isCurrentChainSupported = chainsConfig.supportedChains.includes(chainId)
+
+  const onChangeNetwork = (chainId: number) => {
+    setNetwork(chainId)
+    onSelect && onSelect(chainId)
     setOpen(false)
   }
 
@@ -80,7 +46,7 @@ export const NetworkDropdown = ({ onSelect }: NetworkDropdownProps) => {
         direction={'row'}
         alignItems={'center'}
         justifyContent={'space-between'}
-        width={'200px'}
+        width={'240px'}
         sx={{
           background: theme.palette.other.neutral.n200,
           border: `1px solid ${theme.palette.primary.main}`,
@@ -96,17 +62,27 @@ export const NetworkDropdown = ({ onSelect }: NetworkDropdownProps) => {
           spacing={theme.spacing(1)}
           alignItems={'center'}
         >
-          <Image
-            src={network.image}
-            alt={network.name}
+          {isCurrentChainSupported ? (
+            <Image
+              width={24}
+              height={24}
+              src={currentChainConfig.icon}
+              alt=''
+            />
+          ) : (
+            <WarningAmberIcon sx={{ width: 24, height: 24 }} />
+          )}
+          {/* <Image
+            src={supportedChains[network].icon}
+            alt={''}
             width={24}
             height={24}
-          />
+          /> */}
           <Typography
             variant='button-sm'
             color={'white'}
           >
-            {network.name}
+            {currentChainConfig.name}
           </Typography>
         </Stack>
 
@@ -133,13 +109,13 @@ export const NetworkDropdown = ({ onSelect }: NetworkDropdownProps) => {
             zIndex: 1,
           }}
         >
-          {networks.map((network, index) => (
+          {chainsConfig.supportedChains.map((chainId, index) => (
             <Stack
               key={index}
               direction={'row'}
               alignItems={'center'}
               spacing={theme.spacing(2)}
-              onClick={() => onChangeNetwork(network)}
+              onClick={() => onChangeNetwork(chainId)}
               sx={{
                 cursor: 'pointer',
                 padding: '12px 20px',
@@ -149,8 +125,8 @@ export const NetworkDropdown = ({ onSelect }: NetworkDropdownProps) => {
               }}
             >
               <Image
-                src={network.image}
-                alt={network.name}
+                src={supportedChains[chainId].icon}
+                alt={''}
                 width={24}
                 height={24}
               />
@@ -158,7 +134,7 @@ export const NetworkDropdown = ({ onSelect }: NetworkDropdownProps) => {
                 variant='button-sm'
                 color={'white'}
               >
-                {network.name}
+                {supportedChains[chainId].name}
               </Typography>
             </Stack>
           ))}
