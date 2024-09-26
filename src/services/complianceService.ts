@@ -16,7 +16,7 @@ export async function isAddressCompliance(address: string, chainId: number): Pro
         return await readContract(
             wagmiConfig,
             {
-                address: networkConfig[chainId].complianceManager,
+                address: networkConfig[chainId].accessPortal,
                 abi: complianceManagerAbi.abi,
                 functionName: 'isAuthorized',
                 args: [
