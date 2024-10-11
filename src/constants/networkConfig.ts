@@ -2,7 +2,7 @@ import { NetworkConfig, ChainId } from '../types'
 
 export const networkConfig: { [chainId: number]: NetworkConfig } = {
   [ChainId.MAINNET]: {
-    accessPortal: '0x0',
+    accessPortal: '0x82A5439B451D545E747314C17509B693e14B6b4F',
     complianceManager: '0x2633F1725eF69082c6f56806249a5d9281b0b8D4',
     darkpoolAssetManager: '0x159F3668c72BBeCdF1fb31beeD606Ec9649654eB',
     explorerUrl: {
@@ -12,7 +12,7 @@ export const networkConfig: { [chainId: number]: NetworkConfig } = {
     },
   },
   [ChainId.ARBITRUM_ONE]: {
-    accessPortal: '0x0',
+    accessPortal: '0x7e230aa15db2C0B6E293abBa3e0d278f4B612fC4',
     complianceManager: '0x23A37b553c46f4864537Ab1e8d1e49804b47A5A7',
     darkpoolAssetManager: '0xf7C40b5057a1D1a3d58B02BCdb125E63ef380564',
     explorerUrl: {
@@ -22,7 +22,7 @@ export const networkConfig: { [chainId: number]: NetworkConfig } = {
     },
   },
   [ChainId.BASE]: {
-    accessPortal: '0x0',
+    accessPortal: '0xFa368E046B4051582662f7d1C033756dB55058cF',
     complianceManager: '0x34091B8BD5B12fDA9541ABedD5C2A2715e9249d1',
     darkpoolAssetManager: '0x84eb120A35802460484015e6748375369e40468a',
     explorerUrl: {

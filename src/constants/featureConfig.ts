@@ -13,11 +13,11 @@ export const dappConfig: { [chainId: number]: DAppConfig } = {
     },
     [ChainId.ARBITRUM_ONE]: {
         complianceType: ComplianceOnboardingType.COMBO,
-        complianceVendors: [ComplianceOnboardingVendor.ZKME, ComplianceOnboardingVendor.QUADRATA],
+        complianceVendors: [ComplianceOnboardingVendor.ZKME],
     },
     [ChainId.BASE]: {
         complianceType: ComplianceOnboardingType.COMBO,
-        complianceVendors: [ComplianceOnboardingVendor.COINBASE_EAS, ComplianceOnboardingVendor.ZKME, ComplianceOnboardingVendor.QUADRATA],
+        complianceVendors: [ComplianceOnboardingVendor.COINBASE_EAS, ComplianceOnboardingVendor.ZKME],
     },
     [ChainId.BounceBit]: {
         complianceType: ComplianceOnboardingType.COMBO,
@@ -25,7 +25,7 @@ export const dappConfig: { [chainId: number]: DAppConfig } = {
     },
     [ChainId.SEPOLIA]: {
         complianceType: ComplianceOnboardingType.COMBO,
-        complianceVendors: [ComplianceOnboardingVendor.ZKME, ComplianceOnboardingVendor.QUADRATA],
+        complianceVendors: [ComplianceOnboardingVendor.ZKME],
     },
     [ChainId.BounceBitTestnet]: {
         complianceType: ComplianceOnboardingType.COMBO,
@@ -37,10 +37,10 @@ export const dappConfig: { [chainId: number]: DAppConfig } = {
     },
     [ChainId.HARDHAT_ARBITRUM]: {
         complianceType: ComplianceOnboardingType.COMBO,
-        complianceVendors: [ComplianceOnboardingVendor.ZKME, ComplianceOnboardingVendor.QUADRATA],
+        complianceVendors: [ComplianceOnboardingVendor.ZKME],
     },
     [ChainId.HARDHAT_BASE]: {
         complianceType: ComplianceOnboardingType.COMBO,
-        complianceVendors: [ComplianceOnboardingVendor.ZKME, ComplianceOnboardingVendor.QUADRATA],
+        complianceVendors: [ComplianceOnboardingVendor.ZKME],
     },
 }
