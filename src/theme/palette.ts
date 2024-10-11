@@ -16,6 +16,8 @@ interface OtherColorTypes {
   primary: {
     p200: string
     p50: string
+    p950: string
+    p800: string
   }
   neutral: {
     n950: string
@@ -24,6 +26,7 @@ interface OtherColorTypes {
     n500: string
     n700: string
     n50: string
+    n100: string
   }
 }
 
@@ -76,6 +79,8 @@ const palette: PaletteOptions | undefined = {
     primary: {
       p200: '#347F44',
       p50: '#1D5A2B',
+      p950: '#E4FBE9',
+      p800: '#C9F8D3',
     },
     neutral: {
       n950: '#FFFFFF',
@@ -84,6 +89,7 @@ const palette: PaletteOptions | undefined = {
       n500: '#A4C0B2',
       n700: '#D1DFD9',
       n50: '#2F3C35',
+      n100: '#3D4C44',
     },
   },
   action: {

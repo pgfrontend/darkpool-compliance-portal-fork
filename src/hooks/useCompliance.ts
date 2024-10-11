@@ -12,6 +12,11 @@ export const useComplianceCheck = (
   const isNotCompliant = isCompliant === false
 
   useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      setIsCompliant(true)
+      return
+    }
+
     if (address && ethers.utils.isAddress(address) && chainId) {
       setLoading(true)
       isAddressCompliance(address, chainId)
