@@ -1,13 +1,13 @@
 import numeral from 'numeral'
 
-
 export const formatHash = (hash: string, chars = 6) => {
   return `${hash.substring(0, hash.length - chars)}...`
 }
 
-export const formatWalletHash = (txHash: string, chars = 6) => {
+export const formatWalletHash = (txHash?: string, chars = 6) => {
+  if (!txHash) return ''
   return `${txHash.substring(0, chars + 2)}...${txHash.substring(
-    txHash.length - chars,
+    txHash.length - chars
   )}`
 }
 
@@ -57,30 +57,28 @@ export const formatContractError = (message: string) => {
   if (formatMessage.includes('cannot estimate gas'))
     return 'Cannot estimate gas fee, transaction may fail or require manual gas limit'
 
-  if (formatMessage.includes('insufficient funds'))
-    return 'Insufficient funds'
+  if (formatMessage.includes('insufficient funds')) return 'Insufficient funds'
 
   return 'An unexpected error occured, please try again'
 }
 
 export const formatDate = (date: Date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
 
-  return `${year}${month}${day}${hours}${minutes}`;
+  return `${year}${month}${day}${hours}${minutes}`
 }
 
-
 export function formatTimestampInUTC(timestamp: number): string {
-  const date = new Date(timestamp * 1000);
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(date.getUTCDate()).padStart(2, '0');
-  const hour = String(date.getUTCHours()).padStart(2, '0');
-  const minute = String(date.getUTCMinutes()).padStart(2, '0');
+  const date = new Date(timestamp * 1000)
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(date.getUTCDate()).padStart(2, '0')
+  const hour = String(date.getUTCHours()).padStart(2, '0')
+  const minute = String(date.getUTCMinutes()).padStart(2, '0')
 
-  return `${day}/${month}/${year} ${hour}:${minute} UTC`;
+  return `${day}/${month}/${year} ${hour}:${minute} UTC`
 }
