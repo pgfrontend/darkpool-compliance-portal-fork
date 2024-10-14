@@ -52,4 +52,9 @@ export const supportedChains: { [chainId: number]: ChainConfig } = {
         icon: '/images/chain/bouncebit.svg',
         chainId: ChainId.BounceBitTestnet
     },
+    [ChainId.AlphaSeaseed]: {
+        name: 'AlphaSeaseed',
+        icon: '/images/chain/seaseed.svg',
+        chainId: ChainId.AlphaSeaseed
+    },
 }

@@ -49,6 +49,7 @@ export enum ChainId {
   BASE = 8453,
   BounceBit = 6001,
   BounceBitTestnet = 6000,
+  AlphaSeaseed = 4898,
 }
 
 export enum ComplianceOnboardingType {
@@ -59,7 +60,6 @@ export enum ComplianceOnboardingType {
 export enum ComplianceOnboardingVendor {
   KEYRING = 1,
   ZKME = 2,
-  QUADRATA = 3,
   COINBASE_EAS = 4,
 }
 

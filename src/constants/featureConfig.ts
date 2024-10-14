@@ -31,6 +31,10 @@ export const dappConfig: { [chainId: number]: DAppConfig } = {
         complianceType: ComplianceOnboardingType.COMBO,
         complianceVendors: [ComplianceOnboardingVendor.ZKME],
     },
+    [ChainId.AlphaSeaseed]: {
+        complianceType: ComplianceOnboardingType.COMBO,
+        complianceVendors: [ComplianceOnboardingVendor.ZKME],
+    },
     [ChainId.HARDHAT]: {
         complianceType: ComplianceOnboardingType.COMBO,
         complianceVendors: [ComplianceOnboardingVendor.KEYRING],
