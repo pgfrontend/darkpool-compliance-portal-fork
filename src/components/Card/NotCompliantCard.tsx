@@ -13,6 +13,8 @@ import { backgrounds, borderRadius } from 'polished'
 import { NetworkDropdown } from '../Dropdowns/NetworkDropdown'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { useState } from 'react'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
+import { supportedChains } from '../../constants/chains'
 
 interface NotCompliantCardProps {
   onVerify: (vendor: ComplianceOnboardingVendor) => void
@@ -25,9 +27,11 @@ export const NotCompliantCard = ({
   onCheckCompliance,
   onBridgeToken,
 }: NotCompliantCardProps) => {
-  const { chainId } = useAccount()
+  const { chainId } = useChainContext()
   const theme = useTheme()
   const [sourceChainId, setSourceChainId] = useState<number | null>(null)
+
+  const currentChainConfig = supportedChains[chainId]
 
   const onSelectSourceChain = (chainId: number) => {
     setSourceChainId(chainId)
@@ -182,14 +186,14 @@ export const NotCompliantCard = ({
           }}
         >
           <Typography variant='heading-2xl'>
-            Have access token on other chain?
+            Bridge Compliance Status
           </Typography>
           <Typography
             variant='body-xs'
             fontWeight={600}
             mt={'16px'}
           >
-            Have access token on other chain?
+            Have passed KYC/KYB on another chain?
           </Typography>
 
           {/* Box */}
@@ -222,10 +226,43 @@ export const NotCompliantCard = ({
                 color={'black'}
                 fontWeight={600}
               >
-                Select another chain
+                Bridge Compliance Status from
               </Typography>
 
-              <NetworkDropdown onSelect={onSelectSourceChain} />
+              <NetworkDropdown onSelect={onSelectSourceChain}/>
+
+              <Typography
+                variant='body-md'
+                color={'black'}
+                fontWeight={600}
+              >
+                To
+              </Typography>
+
+              <Stack
+                direction={'row'}
+                spacing={theme.spacing(1)}
+                alignItems={'center'}
+                sx={{
+                  background: theme.palette.other.neutral.n200,
+                  border: `1px solid ${theme.palette.primary.main}`,
+                  borderRadius: '9999px',
+                  padding: '12px 20px',
+                }}
+              >
+                <Image
+                    width={24}
+                    height={24}
+                    src={currentChainConfig.icon}
+                    alt=''
+                  />
+                <Typography
+                  variant='button-sm'
+                  color={'white'}
+                >
+                  {currentChainConfig.name}
+                </Typography>
+              </Stack>
 
               <ModalButton
                 title='Bridge'
