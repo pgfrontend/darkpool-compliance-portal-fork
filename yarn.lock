@@ -1395,23 +1395,6 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
-"@quadrata/core-react@^2.5.1", "@quadrata/core-react@^2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@quadrata/core-react/-/core-react-2.7.0.tgz#08e634ca0c53a07c74ddef83258d927664701d03"
-  integrity sha512-VSUyYsf5x2DFrPftbJbg7crwyHKLQiedQcl5+dj+yoR98RTzsMAPXef0wPxxY3s9qm9fBbNX6ygG9OpaNWQh3g==
-  dependencies:
-    react-ymd-date-select "^0.3.0"
-
-"@quadrata/kyb-react@^2.5.2":
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/@quadrata/kyb-react/-/kyb-react-2.5.2.tgz#ba6f5b3e27038564dd2efbbac64e18ae6ef80a3e"
-  integrity sha512-eN8O4xCK7E8mpwKYJNpH1M3wM0HfpUq5Hm4kxmxAiv1o8F/v51p687Zpdvml0RTAtTRRhBz/LpFdwmOSCDBpkg==
-  dependencies:
-    "@quadrata/core-react" "^2.5.1"
-    "@reduxjs/toolkit" "^1.8.1"
-    react-query "^3.39.3"
-    react-redux "^8.0.1"
-
 "@react-native-async-storage/async-storage@^1.17.11":
   version "1.23.1"
   resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.23.1.tgz#cad3cd4fab7dacfe9838dce6ecb352f79150c883"
@@ -1419,7 +1402,7 @@
   dependencies:
     merge-options "^3.0.4"
 
-"@reduxjs/toolkit@^1.8.1", "@reduxjs/toolkit@^1.9.5":
+"@reduxjs/toolkit@^1.9.5":
   version "1.9.7"
   resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.9.7.tgz#7fc07c0b0ebec52043f8cb43510cf346405f78a6"
   integrity sha512-t7v8ZPxhhKgOKtU+uyJT13lu4vL7az5aFi4IdoDs/eS548edn2M8Ik9h8fxgvMjGoAUVFSt6ZC1P5cWmQ014QQ==
@@ -3363,7 +3346,7 @@ data-view-byte-offset@^1.0.0:
     es-errors "^1.3.0"
     is-data-view "^1.0.1"
 
-date-fns@^2.28.0, date-fns@^2.29.3:
+date-fns@^2.29.3:
   version "2.30.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.30.0.tgz#f367e644839ff57894ec6ac480de40cae4b0f4d0"
   integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
@@ -7250,7 +7233,7 @@ react-query@^3.39.3:
     broadcast-channel "^3.4.1"
     match-sorter "^6.0.2"
 
-react-redux@^8.0.1, react-redux@^8.0.5:
+react-redux@^8.0.5:
   version "8.1.3"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-8.1.3.tgz#4fdc0462d0acb59af29a13c27ffef6f49ab4df46"
   integrity sha512-n0ZrutD7DaX/j9VscF+uTALI3oUPa/pO4Z3soOBIjuRn/FzVu6aehhysxZCLi6y7duMf52WNZGMl7CtuK5EnRw==
@@ -7286,13 +7269,6 @@ react-window@^1.8.10:
   dependencies:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
-
-react-ymd-date-select@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/react-ymd-date-select/-/react-ymd-date-select-0.3.0.tgz#9e8bd3fcbdc6393b1e5dcb7bb6d875ba615ff3de"
-  integrity sha512-frX9m7eo7dC6j8nJr1pWEq+Ti++ojftVbBDeivrozxervvkZTzPW3PgZA8hwTQwED5NmslaeXBVZyUOBu89a6w==
-  dependencies:
-    date-fns "^2.28.0"
 
 react@^18.2.0:
   version "18.2.0"

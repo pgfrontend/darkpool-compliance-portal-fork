@@ -31,6 +31,19 @@ const hardhatPolygon = defineChain({
     },
 })
 
+const alphaSeaseed = defineChain({
+    id: ChainId.AlphaSeaseed,
+    name: 'AlphaSeaseed',
+    nativeCurrency: {
+        decimals: 18,
+        name: 'SSN',
+        symbol: 'SSN',
+    },
+    rpcUrls: {
+        default: { http: ['https://rpc.alpha.seaseed.network'] },
+    },
+})
+
 const bounceBitTestnet = defineChain({
     id: ChainId.BounceBitTestnet,
     name: 'BounceBit Testnet',
@@ -64,6 +77,7 @@ const wagmiChainIdMapping: Record<number, Chain> = {
     [ChainId.BASE]: base,
     [ChainId.BounceBit]: bounceBitMainnet,
     [ChainId.BounceBitTestnet]: bounceBitTestnet,
+    [ChainId.AlphaSeaseed]: alphaSeaseed,
     [ChainId.HARDHAT]: hardhat,
     [ChainId.HARDHAT_BASE]: hardhatPolygon,
     [ChainId.HARDHAT_ARBITRUM]: hardhatArbitrum,

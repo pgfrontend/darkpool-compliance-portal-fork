@@ -25,14 +25,6 @@ export const complianceVendorConfig: Record<number, VendorConfig> = {
     isKyc: true,
     isKyb: false,
   },
-  [ComplianceOnboardingVendor.QUADRATA]: {
-    name: 'QUADRATA',
-    logo: '/images/compliance/quadrata.png',
-    description:
-      'A Passport Network bringing the identity and compliance layer to DeFi across existing public blockchains. Offers KYB services',
-    isKyc: false,
-    isKyb: true,
-  },
   [ComplianceOnboardingVendor.COINBASE_EAS]: {
     name: 'Coinbase EAS',
     logo: '/images/compliance/base.svg',

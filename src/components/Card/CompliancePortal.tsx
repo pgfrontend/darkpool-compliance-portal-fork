@@ -12,7 +12,6 @@ import { useAccount, useDisconnect } from 'wagmi'
 import { useChainContext } from '../../contexts/ChainContext/hooks'
 import { useToast } from '../../contexts/ToastContext/hooks'
 import { useCoinbaseEas } from '../../hooks/coinbaseEas/hook'
-import { useQuadrata } from '../../hooks/quadrata/hook'
 import { useCompliance } from '../../hooks/useCompliance'
 import { useZkMe } from '../../hooks/zkme/hook'
 import { ComplianceOnboardingVendor } from '../../types'
@@ -93,11 +92,6 @@ const CompliancePortal: React.FC = () => {
     address,
     chainId
   )
-  const { getAccessToken, createQuadrataWidget } = useQuadrata(
-    address,
-    chainId,
-    onQuadrataClose
-  )
 
   const { launchEas } = useCoinbaseEas()
 
@@ -112,12 +106,6 @@ const CompliancePortal: React.FC = () => {
         break
       case ComplianceOnboardingVendor.ZKME:
         await launchZKmeWidget()
-        break
-      case ComplianceOnboardingVendor.QUADRATA:
-        const accessToken = await getAccessToken()
-        setQuadrataAccessToken(accessToken)
-        setQuadrataWidget(createQuadrataWidget(accessToken, chainId))
-        setShowQuadrata(true)
         break
       case ComplianceOnboardingVendor.COINBASE_EAS:
         launchEas()

@@ -88,7 +88,7 @@ export const CompliantCard = ({
         {!isAuthorized ? ( // Haven't mint token access
           <Stack spacing={theme.spacing(1)}>
             <WarningAlert
-              text={`You currently do not have an access token. An access token is required to proceed with accessing our platform’s features and services. You can either choose to mint a access token or`}
+              text={`You currently do not have an access token. An access token is required to proceed with accessing our platform’s features and services.`}
             />
 
             <Box
@@ -121,23 +121,6 @@ export const CompliantCard = ({
                     width: '100%',
                   }}
                 />
-
-                <Stack
-                  direction={'row'}
-                  justifyContent={'space-between'}
-                  width={'100%'}
-                  spacing={theme.spacing(2)}
-                >
-                  <NetworkDropdown onSelect={onSelectSourceChain} />
-                  <ModalOutlineButton
-                    title='Bridge from another chain'
-                    loading={bridgeLoading}
-                    onClick={onBridge}
-                    sx={{
-                      width: '100%',
-                    }}
-                  />
-                </Stack>
               </Stack>
             </Box>
           </Stack>

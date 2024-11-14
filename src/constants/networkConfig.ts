@@ -61,6 +61,16 @@ export const networkConfig: { [chainId: number]: NetworkConfig } = {
       block: 'https://testnet.bbscan.io/block/',
     },
   },
+  [ChainId.AlphaSeaseed]: {
+    accessPortal: '0x83A631f6D6Cd27C564b479F128B245C3650C47aA',
+    complianceManager: '0x83A631f6D6Cd27C564b479F128B245C3650C47aA',
+    darkpoolAssetManager: '0x83A631f6D6Cd27C564b479F128B245C3650C47aA',
+    explorerUrl: {
+      tx: 'https://explorer.alpha.seaseed.network/tx/',
+      address: 'https://explorer.alpha.seaseed.network/address/',
+      block: 'https://explorer.alpha.seaseed.network/block/',
+    },
+  },
   [ChainId.HARDHAT]: {
     accessPortal: '0x64079a2Edd1104a2323E2b732A1244BCE011B1F5',
     complianceManager: '0x987Aa6E80e995d6A76C4d061eE324fc760Ea9F61',

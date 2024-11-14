@@ -17,7 +17,11 @@ export const NetworkDropdown = ({ onSelect }: NetworkDropdownProps) => {
   const ref = useRef(null)
   const { chainId } = useChainContext()
 
-  const [network, setNetwork] = useState<number>(chainId)
+
+
+  const otherChains = chainsConfig.supportedChains.filter(tmpChainId => tmpChainId != chainId)
+
+  const [network, setNetwork] = useState<number>(otherChains[0])
 
   const currentChainConfig = supportedChains[network]
 
@@ -109,7 +113,7 @@ export const NetworkDropdown = ({ onSelect }: NetworkDropdownProps) => {
             zIndex: 1,
           }}
         >
-          {chainsConfig.supportedChains.map((chainId, index) => (
+          {otherChains.map((chainId, index) => (
             <Stack
               key={index}
               direction={'row'}
