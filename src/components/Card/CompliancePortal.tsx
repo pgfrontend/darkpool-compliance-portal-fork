@@ -20,6 +20,7 @@ import { AnnounceCard } from './AnnounceCard'
 import { ConnectWalletCard } from './ConnectWalletCard'
 import { VerifyAddressCard } from './VerifyAddressCard'
 import { useKeyring } from '../../hooks/keyring/hook'
+import { useSynaps } from '../../hooks/synaps/hook'
 
 const StepEnum = {
   NOT_CONNECTED: 1,
@@ -42,6 +43,8 @@ const CompliancePortal: React.FC = () => {
   const [quadrataAccessToken, setQuadrataAccessToken] = useState<string>()
   const [quadrataWidget, setQuadrataWidget] = useState<ReactNode>()
   const [openInProgress, setOpenInProgress] = useState(false)
+
+  const { launchSynaps } = useSynaps(chainId)
 
   const handleConnectButton = () => {
     setStep(StepEnum.CONNECTING)
@@ -98,17 +101,33 @@ const CompliancePortal: React.FC = () => {
   const { launchKeyring } = useKeyring(chainId)
 
   const onVerify = async (vendor: ComplianceOnboardingVendor) => {
-    setOpenInProgress(true)
+    if (!address) {
+      return
+    }
 
     switch (vendor) {
       case ComplianceOnboardingVendor.KEYRING:
+        setOpenInProgress(true)
         launchKeyring()
         break
       case ComplianceOnboardingVendor.ZKME:
+        setOpenInProgress(true)
         await launchZKmeWidget()
         break
       case ComplianceOnboardingVendor.COINBASE_EAS:
+        setOpenInProgress(true)
         launchEas()
+        break
+      case ComplianceOnboardingVendor.SYNAPS:
+        launchSynaps(
+          address,
+          () => {
+            setOpenInProgress(true)
+          },
+          () => {
+            setOpenInProgress(true)
+          }
+        )
         break
       default:
         return

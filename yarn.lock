@@ -1623,6 +1623,11 @@
   dependencies:
     tslib "^2.4.0"
 
+"@synaps-io/verify-sdk@^4.0.48":
+  version "4.0.48"
+  resolved "https://registry.yarnpkg.com/@synaps-io/verify-sdk/-/verify-sdk-4.0.48.tgz#c19ce9cbcb8306095ccc52749127b7a80cd9339b"
+  integrity sha512-Oa3vVDq8Um2lJ2L1nG/vCPdOzTF6ccgbizrtaLPf/37VjbiLr4CGb1fVqMhzsMFs0niK4qL97NZni7DR/8nDmg==
+
 "@tanstack/query-core@5.28.6":
   version "5.28.6"
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.28.6.tgz#a3bdb108f9f8d4e2ba3163068dbe6ff55b905a81"
