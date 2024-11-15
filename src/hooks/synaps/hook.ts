@@ -24,7 +24,7 @@ export const useSynaps = (chainId: number) => {
     }
 
     const getSessionId = async (wallet: string) => {
-        const result = await axios.post(`${SYNAPS_SERVER_URL}/api/session/create`, {
+        const result = await axios.post(`${SYNAPS_SERVER_URL}/synaps/api/session/create`, {
             chainId,
             wallet,
         })
