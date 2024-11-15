@@ -61,6 +61,7 @@ export enum ComplianceOnboardingVendor {
   KEYRING = 1,
   ZKME = 2,
   COINBASE_EAS = 4,
+  SYNAPS = 8
 }
 
 export interface AddSignatureRequest {
@@ -122,4 +123,13 @@ export interface GetStatusResponse {
       expiresAt: string
     }
   } | null
+}
+
+
+export enum SynapsSessionStatus {
+  PENDING_VERIFICATION = 'PENDING_VERIFICATION',
+  APPROVED = 'APPROVED',
+  RESUBMISSION_REQUIRED = 'RESUBMISSION_REQUIRED',
+  REJECTED = 'REJECTED',
+  RESET = 'RESET'
 }
