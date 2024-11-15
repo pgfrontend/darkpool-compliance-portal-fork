@@ -73,7 +73,7 @@ export const networkConfig: { [chainId: number]: NetworkConfig } = {
   },
   [ChainId.HARDHAT]: {
     accessPortal: '0x64079a2Edd1104a2323E2b732A1244BCE011B1F5',
-    complianceManager: '0x987Aa6E80e995d6A76C4d061eE324fc760Ea9F61',
+    complianceManager: '0x0',
     darkpoolAssetManager: '0xe24e7570Fe7207AdAaAa8c6c89a59850391B5276',
     explorerUrl: {
       tx: 'https://sepolia.etherscan.io/tx/',
@@ -83,7 +83,7 @@ export const networkConfig: { [chainId: number]: NetworkConfig } = {
   },
   [ChainId.HARDHAT_BASE]: {
     accessPortal: '0x0',
-    complianceManager: '0x70bDA08DBe07363968e9EE53d899dFE48560605B',
+    complianceManager: '0x0',
     darkpoolAssetManager: '0x045857BDEAE7C1c7252d611eB24eB55564198b4C',
     explorerUrl: {
       tx: 'https://arbiscan.io/tx/',
@@ -92,9 +92,9 @@ export const networkConfig: { [chainId: number]: NetworkConfig } = {
     },
   },
   [ChainId.HARDHAT_ARBITRUM]: {
-    accessPortal: '0x6808f44a003FF74390Ea500429593D682F7e0Db1',
-    complianceManager: '0x70bDA08DBe07363968e9EE53d899dFE48560605B',
-    darkpoolAssetManager: '0x045857BDEAE7C1c7252d611eB24eB55564198b4C',
+    accessPortal: '0xd0C021931Bc6279dEe7a139b05F198038E9C53F7',
+    complianceManager: '0x0',
+    darkpoolAssetManager: '0xc5B86EcB7Cf82213B392D668614429A0d0763745',
     explorerUrl: {
       tx: 'https://arbiscan.io/tx/',
       address: 'https://arbiscan.io/address/',
