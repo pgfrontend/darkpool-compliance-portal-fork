@@ -25,12 +25,15 @@ export const useAccessToken = () => {
   const { address, chainId } = useAccount()
   const [error, setError] = useState<string | null>(null)
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
+  const [isGetStatusLoading, setIsGetStatusLoading] = useState<boolean>(false)
   const [mintLoading, setMintLoading] = useState<boolean>(false)
   const [bridgeLoading, setBridgeLoading] = useState<boolean>(false)
+  const [isCompliant, setIsCompliant] = useState<boolean>(false)
+  const [mintRequired, setMintRequired] = useState<boolean>(false)
 
   const [expiresAt, setExpiresAt] = useState<string | null>(null)
 
-  const { showPendingToast, closeToast, showSuccessToast, showWarningToast } =
+  const { showPendingToast,updatePendingToast, closeToast, showSuccessToast, showWarningToast } =
     useToast()
 
   useEffect(() => {
@@ -89,7 +92,7 @@ export const useAccessToken = () => {
       return
     }
     try {
-      showPendingToast(undefined, 'Checking compliance status...')
+      setIsGetStatusLoading(true)
       const response = await axios({
         method: 'GET',
         url: `${BACKEND_URL}/api/token/status`,
@@ -104,15 +107,16 @@ export const useAccessToken = () => {
         throw new Error('Token is null')
       }
 
+      setIsCompliant(token.body.provider.status || false)
+      setMintRequired(token.body.mintRequired || false)
       setIsAuthorized(token.body.accessToken.status)
       setExpiresAt(token.body.accessToken.expiresAt)
-      showSuccessToast(undefined, 'Compliance status checked successfully')
     } catch (error: any) {
       console.error('Error checking compliance status:', error)
       setError(error.message)
       showWarningToast(undefined, error.message)
     } finally {
-      closeToast()
+      setIsGetStatusLoading(false)
     }
   }
 
@@ -168,6 +172,9 @@ export const useAccessToken = () => {
     onBridgeSignature,
     error,
     isAuthorized,
+    isCompliant,
+    mintRequired,
+    isGetStatusLoading,
     mintLoading,
     bridgeLoading,
     expiresAt,

@@ -35,16 +35,7 @@ const CompliancePortal: React.FC = () => {
   const { disconnect } = useDisconnect()
 
   const { chainId } = useChainContext()
-  const { isNotCompliant, isLoading, isCompliant, onCheckCompliance } =
-    useCompliance()
-  const { showPendingToast, closeToast } = useToast()
 
-  const [showQuadrata, setShowQuadrata] = useState(false)
-  const [quadrataAccessToken, setQuadrataAccessToken] = useState<string>()
-  const [quadrataWidget, setQuadrataWidget] = useState<ReactNode>()
-  const [openInProgress, setOpenInProgress] = useState(false)
-
-  const { launchSynaps } = useSynaps(chainId)
 
   const handleConnectButton = () => {
     setStep(StepEnum.CONNECTING)
@@ -55,10 +46,6 @@ const CompliancePortal: React.FC = () => {
     setStep(StepEnum.NOT_CONNECTED)
   }
 
-  const closeModalAndRefresh = async () => {
-    setOpenInProgress(false)
-    await onCheckCompliance()
-  }
 
   useEffect(() => {
     if (!isConnected) {
@@ -68,71 +55,7 @@ const CompliancePortal: React.FC = () => {
     if (address && isConnected) {
       setStep(StepEnum.CONNECTED)
     }
-
-    if (isConnected && isCompliant) {
-      setOpenInProgress(false)
-    } else {
-    }
-
-    if (isLoading && isNotCompliant) {
-      showPendingToast(undefined, 'Compliance checking')
-    }
-
-    if (!isLoading) {
-      closeToast()
-    }
-  }, [chainId, address, isConnected, isLoading, isCompliant])
-
-  const onQuadrataClose = () => {
-    console.log('Quadrata KYB widget closed')
-    setShowQuadrata(false)
-    setQuadrataAccessToken(undefined)
-    setQuadrataWidget(undefined)
-    onCheckCompliance()
-  }
-
-  const { launchWidget: launchZKmeWidget, loading: zkLoading } = useZkMe(
-    address,
-    chainId
-  )
-
-  const { launchEas } = useCoinbaseEas()
-
-  const { launchKeyring } = useKeyring(chainId)
-
-  const onVerify = async (vendor: ComplianceOnboardingVendor) => {
-    if (!address) {
-      return
-    }
-
-    switch (vendor) {
-      case ComplianceOnboardingVendor.KEYRING:
-        setOpenInProgress(true)
-        launchKeyring()
-        break
-      case ComplianceOnboardingVendor.ZKME:
-        setOpenInProgress(true)
-        await launchZKmeWidget()
-        break
-      case ComplianceOnboardingVendor.COINBASE_EAS:
-        setOpenInProgress(true)
-        launchEas()
-        break
-      case ComplianceOnboardingVendor.SYNAPS:
-        launchSynaps(
-          address,
-          () => {
-            setOpenInProgress(true)
-          },
-          () => {
-            setOpenInProgress(true)
-          }
-        )
-        break
-      default:
-        return
-    }
-  }
+  }, [chainId, address, isConnected])
 
   const complianceRender = () => {
     switch (step) {
@@ -144,10 +67,6 @@ const CompliancePortal: React.FC = () => {
         return (
           <VerifyAddressCard
             logout={logout}
-            onVerify={onVerify}
-            isLoading={isLoading}
-            isCompliant={isCompliant}
-            onCheckCompliance={onCheckCompliance}
           />
         )
       default:
@@ -166,18 +85,6 @@ const CompliancePortal: React.FC = () => {
         Compliance Portal
       </Typography>
       {complianceRender()}
-
-      {showQuadrata && quadrataAccessToken && quadrataWidget && (
-        <Box>{quadrataWidget}</Box>
-      )}
-
-      <LoadingComplianceModal
-        open={openInProgress && !showQuadrata}
-        onClose={() => { }}
-        doRefresh={closeModalAndRefresh}
-      >
-        <></>
-      </LoadingComplianceModal>
     </StyledBox>
   )
 }
