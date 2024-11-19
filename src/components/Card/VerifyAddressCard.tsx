@@ -1,64 +1,109 @@
 import {
   Box,
-  Button,
   CircularProgress,
   Stack,
   Typography,
-  useTheme,
+  useTheme
 } from '@mui/material'
 import Image from 'next/image'
+import { useState } from 'react'
 import { useAccount } from 'wagmi'
-import Ethereum from '../../../public/images/chain/ethereum.png'
-import ExternalLink from '../../../public/images/external-link-icon.svg'
-import { complianceVendorConfig } from '../../constants/complianceConfig'
-import { dappConfig } from '../../constants/featureConfig'
+import { supportedChains } from '../../constants/chains'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
 import { useToast } from '../../contexts/ToastContext/hooks'
 import { formatWalletHash } from '../../helpers'
-import { ComplianceOnboardingVendor } from '../../types'
-import { WarningAlert } from '../Alert/InfoAlert'
-import { AlignedRow } from '../Box/AlignedRow'
-import { ModalButton } from '../Button/ModalButton'
-import {
-  ContentBox,
-  StyledCard,
-  StyledComplianceChip,
-} from './CompliancePortal'
-import { useChainContext } from '../../contexts/ChainContext/hooks'
-import { useCompliance } from '../../hooks/useCompliance'
-import { supportedChains } from '../../constants/chains'
-import { NotCompliantCard } from './NotCompliantCard'
-import { CompliantCard } from './CompliantCard'
+import { useCoinbaseEas } from '../../hooks/coinbaseEas/hook'
+import { useKeyring } from '../../hooks/keyring/hook'
+import { useSynaps } from '../../hooks/synaps/hook'
 import { useAccessToken } from '../../hooks/useAccessToken'
+import { useZkMe } from '../../hooks/zkme/hook'
+import { ComplianceOnboardingVendor } from '../../types'
+import { LoadingComplianceModal } from '../Modal/LoadingComplianceModal'
+import {
+  ContentBox
+} from './CompliancePortal'
+import { CompliantCard } from './CompliantCard'
+import { NotCompliantCard } from './NotCompliantCard'
 
 interface VerifyAddressCardProps {
   logout: () => void
-  onVerify: (vendor: ComplianceOnboardingVendor) => void
-  isLoading: boolean
-  isCompliant: boolean | undefined
-  onCheckCompliance: () => void
 }
 
 export const VerifyAddressCard = ({
   logout,
-  onVerify,
-  isLoading,
-  isCompliant,
-  onCheckCompliance,
 }: VerifyAddressCardProps) => {
   const { address } = useAccount()
   const theme = useTheme()
+  const [openInProgress, setOpenInProgress] = useState(false)
 
   const { chainId } = useChainContext()
-  const { showPendingToast } = useToast()
   const {
     isAuthorized,
-
+    isCompliant,
+    mintRequired,
+    onGetStatus,
     onAddSignature,
     onBridgeSignature,
+    isGetStatusLoading,
     mintLoading,
     bridgeLoading,
     expiresAt,
   } = useAccessToken()
+
+  const onCheckCompliance = () => {
+    onGetStatus()
+  }
+
+
+  const closeModalAndRefresh = async () => {
+    setOpenInProgress(false)
+    await onCheckCompliance()
+  }
+
+  const { launchSynaps } = useSynaps(chainId)
+
+  const { launchWidget: launchZKmeWidget, loading: zkLoading } = useZkMe(
+    address,
+    chainId
+  )
+
+  const { launchEas } = useCoinbaseEas()
+
+  const { launchKeyring } = useKeyring(chainId)
+
+  const onVerify = async (vendor: ComplianceOnboardingVendor) => {
+    if (!address) {
+      return
+    }
+
+    switch (vendor) {
+      case ComplianceOnboardingVendor.KEYRING:
+        setOpenInProgress(true)
+        launchKeyring()
+        break
+      case ComplianceOnboardingVendor.ZKME:
+        setOpenInProgress(true)
+        await launchZKmeWidget()
+        break
+      case ComplianceOnboardingVendor.COINBASE_EAS:
+        setOpenInProgress(true)
+        launchEas()
+        break
+      case ComplianceOnboardingVendor.SYNAPS:
+        launchSynaps(
+          address,
+          () => {
+            setOpenInProgress(true)
+          },
+          () => {
+            setOpenInProgress(true)
+          }
+        )
+        break
+      default:
+        return
+    }
+  }
 
   return (
     <ContentBox
@@ -120,7 +165,7 @@ export const VerifyAddressCard = ({
         </Typography>
       </Stack>
 
-      {isLoading ? (
+      {isGetStatusLoading ? (
         <Box
           padding='32px'
           bgcolor='#3D4C44'
@@ -160,6 +205,13 @@ export const VerifyAddressCard = ({
           onCheckCompliance={onCheckCompliance}
         />
       )}
+      <LoadingComplianceModal
+        open={openInProgress}
+        onClose={() => { }}
+        doRefresh={closeModalAndRefresh}
+      >
+        <></>
+      </LoadingComplianceModal>
     </ContentBox>
   )
 }

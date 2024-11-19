@@ -122,6 +122,10 @@ export interface GetStatusResponse {
       status: boolean
       expiresAt: string
     }
+    provider: {
+      status: boolean
+    },
+    mintRequired: boolean
   } | null
 }
 
