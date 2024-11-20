@@ -1,6 +1,6 @@
 import { Box, Stack, Typography, useTheme } from '@mui/material'
 import Image from 'next/image'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 import { chainsConfig } from '../../constants'
 import { supportedChains } from '../../constants/chains'
@@ -26,6 +26,11 @@ export const NetworkDropdown = ({ onSelect }: NetworkDropdownProps) => {
   const currentChainConfig = supportedChains[network]
 
   const isCurrentChainSupported = chainsConfig.supportedChains.includes(chainId)
+
+  useEffect(() => {
+    onSelect && onSelect(network)
+  }, [network])
+
 
   const onChangeNetwork = (chainId: number) => {
     setNetwork(chainId)
