@@ -141,7 +141,7 @@ export const useAccessToken = () => {
       const accessToken = response.data as BridgeSignatureResponse
 
       if (!accessToken.body) {
-        throw new Error('Access token is null')
+        throw new Error('Nothing to bridge on this chain')
       }
 
       const tx = await bridgeService(
