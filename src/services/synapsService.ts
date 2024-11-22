@@ -2,6 +2,8 @@ import { SynapsSessionStatus } from '../types'
 
 export const formatSessionStatus = (status: SynapsSessionStatus) => {
   switch (status) {
+    case SynapsSessionStatus.SUBMISSION_REQUIRED:
+      return 'Submission Required'
     case SynapsSessionStatus.APPROVED:
       return 'Verified'
     case SynapsSessionStatus.REJECTED:
