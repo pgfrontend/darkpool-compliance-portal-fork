@@ -9,7 +9,7 @@ export type DAppConfig = {
 export const dappConfig: { [chainId: number]: DAppConfig } = {
     [ChainId.MAINNET]: {
         complianceType: ComplianceOnboardingType.COMBO,
-        complianceVendors: [ComplianceOnboardingVendor.KEYRING],
+        complianceVendors: [ComplianceOnboardingVendor.KEYRING, ComplianceOnboardingVendor.SYNAPS],
     },
     [ChainId.ARBITRUM_ONE]: {
         complianceType: ComplianceOnboardingType.COMBO,
