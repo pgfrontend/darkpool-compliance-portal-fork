@@ -9,7 +9,7 @@ export const formatSessionStatus = (status: SynapsSessionStatus) => {
     case SynapsSessionStatus.REJECTED:
       return 'Rejected'
     case SynapsSessionStatus.PENDING_VERIFICATION:
-      return 'Pending'
+      return 'Pending Verification'
     case SynapsSessionStatus.RESET:
       return 'Reset'
     case SynapsSessionStatus.RESUBMISSION_REQUIRED:
