@@ -2,24 +2,43 @@ import { Box, Button, Grid, Stack, Typography, useTheme } from '@mui/material'
 import { WarningAlert } from '../Alert/InfoAlert'
 import { dappConfig } from '../../constants/featureConfig'
 import { useAccount } from 'wagmi'
-import { StyledCard, StyledComplianceChip } from './CompliancePortal'
+import {
+  StyledCard,
+  StyledComplianceChip,
+  StyledComplianceChipSynapsStatus,
+} from './CompliancePortal'
 import Image from 'next/image'
 import { complianceVendorConfig } from '../../constants/complianceConfig'
 import ExternalLink from '../../../public/images/external-link-icon.svg'
-import { ComplianceOnboardingVendor } from '../../types'
+import { ComplianceOnboardingVendor, SynapsSessionStatus } from '../../types'
 import { AlignedRow } from '../Box/AlignedRow'
 import { ModalButton } from '../Button/ModalButton'
 import { backgrounds, borderRadius } from 'polished'
 import { NetworkDropdown } from '../Dropdowns/NetworkDropdown'
 import RefreshIcon from '@mui/icons-material/Refresh'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useChainContext } from '../../contexts/ChainContext/hooks'
 import { supportedChains } from '../../constants/chains'
+import axios from 'axios'
+import { useSynaps } from '../../hooks/synaps/hook'
+import { formatSessionStatus } from '../../services/synapsService'
 
 interface NotCompliantCardProps {
   onVerify: (vendor: ComplianceOnboardingVendor) => void
   onCheckCompliance: () => void
   onBridgeToken: (sourceChainId: number) => void
+}
+
+interface FetchSessionResponse {
+  statusCode: number
+  path: string
+  timestamp: string
+  success: true
+  error: null
+  body: {
+    sessionId: string
+    status: SynapsSessionStatus
+  }
 }
 
 export const NotCompliantCard = ({
@@ -30,8 +49,11 @@ export const NotCompliantCard = ({
   const { chainId } = useChainContext()
   const theme = useTheme()
   const [sourceChainId, setSourceChainId] = useState<number | null>(null)
+  const { address } = useAccount()
 
   const currentChainConfig = supportedChains[chainId]
+
+  const { launchSynaps, session } = useSynaps(chainId)
 
   const onSelectSourceChain = (chainId: number) => {
     setSourceChainId(chainId)
@@ -90,30 +112,44 @@ export const NotCompliantCard = ({
           {dappConfig[chainId!].complianceVendors.map((vendor, index) => (
             <StyledCard key={index}>
               <Stack
-                direction='row'
-                gap='8px'
-                alignItems='center'
+                width={'100%'}
+                direction={'row'}
+                justifyContent={'space-between'}
+                alignItems={'center'}
               >
-                <Image
-                  src={complianceVendorConfig[vendor].logo}
-                  width={32}
-                  height={32}
-                  alt='chain-icon'
-                />
-                <Typography
-                  fontSize='18px'
-                  lineHeight='24px'
-                  fontWeight='600'
-                  letterSpacing='-1.5%'
+                <Stack
+                  direction='row'
+                  gap='8px'
+                  alignItems='center'
                 >
-                  {complianceVendorConfig[vendor].name}
-                </Typography>
-                {complianceVendorConfig[vendor].isKyc && (
-                  <StyledComplianceChip label='KYC' />
-                )}
-                {complianceVendorConfig[vendor].isKyb && (
-                  <StyledComplianceChip label='KYB' />
-                )}
+                  <Image
+                    src={complianceVendorConfig[vendor].logo}
+                    width={32}
+                    height={32}
+                    alt='chain-icon'
+                  />
+                  <Typography
+                    fontSize='18px'
+                    lineHeight='24px'
+                    fontWeight='600'
+                    letterSpacing='-1.5%'
+                  >
+                    {complianceVendorConfig[vendor].name}
+                  </Typography>
+                  {complianceVendorConfig[vendor].isKyc && (
+                    <StyledComplianceChip label='KYC' />
+                  )}
+                  {complianceVendorConfig[vendor].isKyb && (
+                    <StyledComplianceChip label='KYB' />
+                  )}
+                </Stack>
+                {vendor === ComplianceOnboardingVendor.SYNAPS &&
+                  session &&
+                  session.status && (
+                    <StyledComplianceChipSynapsStatus
+                      label={formatSessionStatus(session.status)}
+                    />
+                  )}
               </Stack>
 
               <Typography
@@ -136,19 +172,25 @@ export const NotCompliantCard = ({
                   borderRadius: '50px',
                 }}
               >
-                <Stack
-                  direction='row'
-                  gap='8px'
-                  alignItems='center'
-                >
-                  Verify by {complianceVendorConfig[vendor].name}
-                  <Image
-                    src={ExternalLink.src}
-                    width={18}
-                    height={18}
-                    alt='external-link-icon'
-                  />
-                </Stack>
+                {vendor === ComplianceOnboardingVendor.SYNAPS &&
+                session &&
+                session.status ? (
+                  'Continue'
+                ) : (
+                  <Stack
+                    direction='row'
+                    gap='8px'
+                    alignItems='center'
+                  >
+                    Verify by {complianceVendorConfig[vendor].name}
+                    <Image
+                      src={ExternalLink.src}
+                      width={18}
+                      height={18}
+                      alt='external-link-icon'
+                    />
+                  </Stack>
+                )}
               </Button>
             </StyledCard>
           ))}
@@ -229,7 +271,7 @@ export const NotCompliantCard = ({
                 Bridge Compliance Status from
               </Typography>
 
-              <NetworkDropdown onSelect={onSelectSourceChain}/>
+              <NetworkDropdown onSelect={onSelectSourceChain} />
 
               <Typography
                 variant='body-md'
@@ -251,11 +293,11 @@ export const NotCompliantCard = ({
                 }}
               >
                 <Image
-                    width={24}
-                    height={24}
-                    src={currentChainConfig.icon}
-                    alt=''
-                  />
+                  width={24}
+                  height={24}
+                  src={currentChainConfig.icon}
+                  alt=''
+                />
                 <Typography
                   variant='button-sm'
                   color={'white'}

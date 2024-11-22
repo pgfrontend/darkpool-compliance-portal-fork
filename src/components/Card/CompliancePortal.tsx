@@ -1,12 +1,5 @@
-import {
-  Box,
-  Card,
-  Chip,
-  styled,
-  Typography
-} from '@mui/material'
+import { Box, Card, Chip, styled, Typography } from '@mui/material'
 import React, { ReactNode, useEffect, useState } from 'react'
-
 
 import { useAccount, useDisconnect } from 'wagmi'
 import { useChainContext } from '../../contexts/ChainContext/hooks'
@@ -28,14 +21,12 @@ const StepEnum = {
   CONNECTED: 3,
 }
 
-
 const CompliancePortal: React.FC = () => {
   const [step, setStep] = useState(StepEnum.NOT_CONNECTED)
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
 
   const { chainId } = useChainContext()
-
 
   const handleConnectButton = () => {
     setStep(StepEnum.CONNECTING)
@@ -45,7 +36,6 @@ const CompliancePortal: React.FC = () => {
     disconnect()
     setStep(StepEnum.NOT_CONNECTED)
   }
-
 
   useEffect(() => {
     if (!isConnected) {
@@ -64,11 +54,7 @@ const CompliancePortal: React.FC = () => {
       case StepEnum.CONNECTING:
         return <ConnectWalletCard />
       case StepEnum.CONNECTED:
-        return (
-          <VerifyAddressCard
-            logout={logout}
-          />
-        )
+        return <VerifyAddressCard logout={logout} />
       default:
         break
     }
@@ -158,3 +144,12 @@ export const StyledComplianceChip = styled(Chip)(() => {
     textTransform: 'uppercase',
   }
 })
+
+export const StyledComplianceChipSynapsStatus = styled(StyledComplianceChip)(
+  () => {
+    return {
+      border: '1px solid #F59E0B',
+      background: '#FEFAE8',
+    }
+  }
+)
