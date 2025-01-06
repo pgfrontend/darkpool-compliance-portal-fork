@@ -97,7 +97,7 @@ const rpcMapToTransport = (rpcMap: Record<number, string>) => {
 export const wagmiConfig = createConfig({
     chains: [supportedWagmiChains[0],...supportedWagmiChains.slice(1)],
     connectors: [
-        injected({ target: 'metaMask' }),
+        injected(),
         coinbaseWallet({ appName: 'Singularity' }),
         walletConnect({
             projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID ?? '',
