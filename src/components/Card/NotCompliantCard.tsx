@@ -22,9 +22,10 @@ import { supportedChains } from '../../constants/chains'
 import axios from 'axios'
 import { useSynaps } from '../../hooks/synaps/hook'
 import { formatSessionStatus } from '../../services/synapsService'
+import { StyledTextField } from '../Input/StyledTextField'
 
 interface NotCompliantCardProps {
-  onVerify: (vendor: ComplianceOnboardingVendor) => void
+  onVerify: (vendor: ComplianceOnboardingVendor, email?: string) => void
   onCheckCompliance: () => void
   onBridgeToken: (sourceChainId: number) => void
 }
@@ -58,6 +59,8 @@ export const NotCompliantCard = ({
   const onSelectSourceChain = (chainId: number) => {
     setSourceChainId(chainId)
   }
+
+  const [email, setEmail] = useState<string>('')
 
   const onBridge = () => {
     if (sourceChainId) {
@@ -160,10 +163,16 @@ export const NotCompliantCard = ({
                 {complianceVendorConfig[vendor].description}
               </Typography>
 
+              {vendor === ComplianceOnboardingVendor.SYNAPS && (
+              <StyledTextField
+                placeholder='Email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />)}
               <Button
                 variant='contained'
                 color='primary'
-                onClick={() => onVerify(vendor)}
+                onClick={() => onVerify(vendor,email)}
                 sx={{
                   width: 'fit-content',
                   padding: '10px',
@@ -171,6 +180,10 @@ export const NotCompliantCard = ({
                   fontSize: '14px',
                   borderRadius: '50px',
                 }}
+                disabled={
+                  vendor === ComplianceOnboardingVendor.SYNAPS &&
+                  !(email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+                }
               >
                 {vendor === ComplianceOnboardingVendor.SYNAPS &&
                 session &&
