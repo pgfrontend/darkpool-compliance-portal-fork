@@ -41,3 +41,4 @@ yarn-error.log*
 yalc.lock
 yalc.lock
 .vscode/settings.json
+.env
