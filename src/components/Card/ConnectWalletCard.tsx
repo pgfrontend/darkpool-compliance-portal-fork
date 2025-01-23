@@ -2,39 +2,56 @@ import { Button, Stack, Typography } from '@mui/material'
 import { ContentBox } from './CompliancePortal'
 
 import Image from 'next/image'
-import { useConnect } from 'wagmi'
-import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors'
+import { useEffect, useState } from 'react'
+import { useConnect, useConnectors } from 'wagmi'
+import { coinbaseWallet, walletConnect } from 'wagmi/connectors'
 import CoinbaseWallet from '../../../public/images/wallets/coinbase.svg'
 import MetaMask from '../../../public/images/wallets/metamask.svg'
 import WalletConnect from '../../../public/images/wallets/walletconnect.svg'
 import { useChainContext } from '../../contexts/ChainContext/hooks'
-const connectButtons = [
-  {
-    id: 'metamask',
-    name: 'MetaMask',
-    icon: MetaMask,
-    connector: injected({ target: 'metaMask' }),
-  },
-  {
-    id: 'walletconnect',
-    name: 'WalletConnect',
-    icon: WalletConnect,
-    connector: walletConnect({
-      projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID ?? '',
-      showQrModal: true,
-    }),
-  },
-  {
-    id: 'coinbase',
-    name: 'Coinbase Wallet',
-    icon: CoinbaseWallet,
-    connector: coinbaseWallet({ appName: 'Singularity' }),
-  },
-]
+
+const WALLET_CONNECT = {
+  id: 'walletconnect',
+  name: 'WalletConnect',
+  icon: WalletConnect,
+  connector: walletConnect({
+    projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID ?? '',
+    showQrModal: true,
+  }),
+}
+
+const COINBASE = {
+  id: 'coinbase',
+  name: 'Coinbase Wallet',
+  icon: CoinbaseWallet,
+  connector: coinbaseWallet({ appName: 'Singularity' }),
+}
+
+const PARTIAL_METAMASK = {
+  id: 'metamask',
+  name: 'MetaMask       ',
+  icon: MetaMask,
+}
 
 export const ConnectWalletCard = () => {
   const { chainId } = useChainContext()
   const { connect } = useConnect()
+
+  const wagmiConnectors = useConnectors()
+
+  const [connectButtons, setConnectButtons] = useState<any[]>([WALLET_CONNECT, COINBASE])
+
+  useEffect(() => {
+    const metaMaskConnector = wagmiConnectors.find((connector) => connector.id === 'io.metamask')
+    if (metaMaskConnector) {
+      const newMetaMask = {
+        ...PARTIAL_METAMASK,
+        connector: metaMaskConnector,
+      }
+      setConnectButtons([newMetaMask, WALLET_CONNECT, COINBASE])
+    }
+  }, [wagmiConnectors])
+
   return (
     <ContentBox
       maxWidth='480px'

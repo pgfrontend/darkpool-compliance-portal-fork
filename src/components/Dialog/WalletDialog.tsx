@@ -1,6 +1,9 @@
 import { Box, Button, Link, Stack, Typography, useTheme } from '@mui/material'
-import React from 'react'
-import { Config, useConnect } from 'wagmi'
+import React, { useEffect, useState } from 'react'
+import { Config, useConnect, useConnectors } from 'wagmi'
+import { coinbaseWallet, walletConnect } from 'wagmi/connectors'
+import { ConnectData } from 'wagmi/query'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
 import { Wallet } from '../Icon'
 import { BasicModal } from '../Modal/BasicModal'
 import { WalletButton } from '../Wallet/WalletButton'
@@ -8,34 +11,31 @@ import { BasicDialogProps } from './model'
 import coinbaseImg from '/public/images/wallets/coinbase.svg'
 import metamaskImg from '/public/images/wallets/metamask.svg'
 import walletconnectImg from '/public/images/wallets/walletconnect.svg'
-import { coinbaseWallet, injected, metaMask, walletConnect } from 'wagmi/connectors'
-import { useChainContext } from '../../contexts/ChainContext/hooks'
-import { ConnectData } from 'wagmi/query'
 
-const connectors = [
-  {
-    id: 'metamask',
-    name: 'MetaMask       ',
-    icon: metamaskImg,
-    connector: injected({ target: 'metaMask' })
-  },
-  {
-    id: 'walletconnect',
-    name: 'WalletConnect  ',
-    icon: walletconnectImg,
-    connector: walletConnect({
-      projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID ?? '',
-      showQrModal: true,
-    }),
-  },
-  {
-    id: 'coinbase',
-    name: 'Coinbase Wallet',
-    icon: coinbaseImg,
-    connector: coinbaseWallet({ appName: 'Singularity' }),
 
-  }
-]
+const WALLET_CONNECT = {
+  id: 'walletconnect',
+  name: 'WalletConnect  ',
+  icon: walletconnectImg,
+  connector: walletConnect({
+    projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID ?? '',
+    showQrModal: true,
+  }),
+}
+
+const COINBASE = {
+  id: 'coinbase',
+  name: 'Coinbase Wallet',
+  icon: coinbaseImg,
+  connector: coinbaseWallet({ appName: 'Singularity' }),
+
+}
+
+const PARTIAL_METAMASK = {
+  id: 'metamask',
+  name: 'MetaMask       ',
+  icon: metamaskImg,
+}
 
 export const WalletDialog: React.FC<BasicDialogProps> = ({
   open,
@@ -44,6 +44,21 @@ export const WalletDialog: React.FC<BasicDialogProps> = ({
   const theme = useTheme()
   const { connect } = useConnect()
   const { chainId } = useChainContext()
+
+  const wagmiConnectors = useConnectors()
+  const metaMaskConnector = wagmiConnectors.find((connector) => connector.id === 'io.metamask')
+
+  const [connectors, setConnectors] = useState<any[]>([WALLET_CONNECT, COINBASE])
+
+  useEffect(() => {
+    if (metaMaskConnector) {
+      const newMetaMask = {
+        ...PARTIAL_METAMASK,
+        connector: metaMaskConnector,
+      }
+      setConnectors([newMetaMask, WALLET_CONNECT, COINBASE])
+    }
+  }, [metaMaskConnector])
 
   const postConnect = async (data:ConnectData<Config>) => {
     console.log('connected')
