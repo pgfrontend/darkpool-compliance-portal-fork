@@ -1,6 +1,9 @@
 import { Html, Head, Main, NextScript } from 'next/document'
 
 export default function Document() {
+
+  const GA_ID = process.env.NEXT_PUBLIC_GA_ID || ''
+
   return (
     <Html lang="en">
       <Head>
@@ -26,6 +29,22 @@ export default function Document() {
           content="Leveraging the latest zk technology on-chain. Invest in DeFi confidently, transact on-chain confidentially."
         />
         <meta name="twitter:card" content="summary_large_image" />
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `,
+          }}
+        />
       </Head>
       <body>
         <Main />
