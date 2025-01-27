@@ -3,6 +3,7 @@ import axios from 'axios'
 import { DarkpoolError, SynapsSessionStatus } from '../../types'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
+import { em } from 'polished'
 
 const SYNAPS_SERVER_URL = process.env.NEXT_PUBLIC_SYNAPS_SERVER_URL
 
@@ -28,10 +29,10 @@ export const useSynaps = (chainId: number) => {
   const launchSynaps = async (
     wallet: string,
     onFinish: () => void,
-    onClose: () => void
+    onClose: () => void,
+    email?: string,
   ) => {
-    const sessionId = await getSessionId(wallet)
-
+    const sessionId = await getSessionId(wallet, email ? email : "")
     Synaps.init({
       sessionId: sessionId,
       service: 'corporate',
@@ -46,12 +47,13 @@ export const useSynaps = (chainId: number) => {
     Synaps.show()
   }
 
-  const getSessionId = async (wallet: string) => {
+  const getSessionId = async (wallet: string, email:string) => {
     const result = await axios.post(
       `${SYNAPS_SERVER_URL}/synaps/api/session/create`,
       {
         chainId,
         wallet,
+        email
       }
     )
     console.log('=======getToken', result)

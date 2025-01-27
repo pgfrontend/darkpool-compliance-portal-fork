@@ -71,7 +71,7 @@ export const VerifyAddressCard = ({
 
   const { launchKeyring } = useKeyring(chainId)
 
-  const onVerify = async (vendor: ComplianceOnboardingVendor) => {
+  const onVerify = async (vendor: ComplianceOnboardingVendor, email?: string) => {
     if (!address) {
       return
     }
@@ -97,7 +97,8 @@ export const VerifyAddressCard = ({
           },
           () => {
             setOpenInProgress(true)
-          }
+          },
+          email
         )
         break
       default:
