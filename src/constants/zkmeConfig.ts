@@ -1,12 +1,20 @@
-import { ChainId } from "../types"
-
+import { ChainId, DarkpoolError } from "../types"
+import { VerificationLevel } from "@zkmelabs/widget"
 type ZKMEConfigType = {
     APP_ID: string,
     DAPP_NAME: string,
-    lvStr: string,
+    lvStr: VerificationLevel,
     lv: number,
     apiModePermission: number,
     isMint: boolean,
+}
+
+export const zkMeProgramNo: Record<number, string> = {
+    [ChainId.ARBITRUM_ONE]: '202406070001',
+    [ChainId.BASE]: '202408180001',
+    [ChainId.BounceBit]: '202407040001',
+    [ChainId.HARDHAT_ARBITRUM]: '202406070001',
+    [ChainId.HARDHAT_BASE]: '202408180001',
 }
 
 export const defaultZkMeConfig: ZKMEConfigType = {
@@ -36,6 +44,14 @@ export const zkMekChainMapping: Record<number, number> = {
 export const zkMeConfigByChainId: Record<number, ZKMEConfigType> = {
     [ChainId.BounceBit]: zkMeConfigTransactional,
     [ChainId.BounceBitTestnet]: zkMeConfigTransactional,
+}
+
+export const getZkMeProgramNoByChainId = (chainId: number): string => {
+    if (zkMeProgramNo.hasOwnProperty(chainId)) {
+        return zkMeProgramNo[chainId]
+    } else {
+        throw new DarkpoolError(`No zkMe program no found for chainId: ${chainId}`)
+    }
 }
 
 export const getZkMeConfigByChainId = (chainId: number): ZKMEConfigType => {
