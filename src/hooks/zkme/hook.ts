@@ -1,5 +1,5 @@
-import { Provider, verifyWithZkMeServices, ZkMeWidget } from "@zkmelabs/widget"
-import { getZkMeConfigByChainId, zkMekChainMapping } from "../../constants/zkmeConfig"
+import { Provider, verifyWithZkMeServices, ZkMeWidget, VerificationLevel } from "@zkmelabs/widget"
+import { getZkMeConfigByChainId, getZkMeProgramNoByChainId, zkMekChainMapping } from "../../constants/zkmeConfig"
 import { useState } from "react"
 import { ethers } from "ethers"
 import { isAddressEquals } from "../../helpers/utils"
@@ -80,12 +80,17 @@ export function useZkMe(address: string | undefined, chainId: number) {
 
         const zkMeConfig = getZkMeConfigByChainId(chainId)
         const refeindChainId = refineChainId(chainId)
+        const programNo = getZkMeProgramNoByChainId(refeindChainId)
 
         const zkMeWidget = new ZkMeWidget(
             zkMeConfig.APP_ID,
             zkMeConfig.DAPP_NAME,
             hexlify(refeindChainId),
-            provider
+            provider,
+            {
+                lv: zkMeConfig.lvStr,
+                programNo: programNo,
+            }
         )
 
         console.log("zkMeConfig", zkMeConfig)
