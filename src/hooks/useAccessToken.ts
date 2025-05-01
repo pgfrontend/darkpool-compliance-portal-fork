@@ -107,7 +107,7 @@ export const useAccessToken = () => {
         throw new Error('Token is null')
       }
 
-      setIsCompliant(token.body.provider.status || false)
+      setIsCompliant(token.body.provider.status || token.body.accessToken.status || false)
       setMintRequired(token.body.mintRequired || false)
       setIsAuthorized(token.body.accessToken.status)
       setExpiresAt(token.body.accessToken.expiresAt)
