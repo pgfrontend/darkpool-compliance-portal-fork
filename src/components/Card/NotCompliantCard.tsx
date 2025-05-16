@@ -1,28 +1,23 @@
+import RefreshIcon from '@mui/icons-material/Refresh'
 import { Box, Button, Grid, Stack, Typography, useTheme } from '@mui/material'
-import { WarningAlert } from '../Alert/InfoAlert'
-import { dappConfig } from '../../constants/featureConfig'
+import Image from 'next/image'
+import { useState } from 'react'
 import { useAccount } from 'wagmi'
+import ExternalLink from '../../../public/images/external-link-icon.svg'
+import { supportedChains } from '../../constants/chains'
+import { complianceVendorConfig } from '../../constants/complianceConfig'
+import { dappConfig } from '../../constants/featureConfig'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
+import { useSynaps } from '../../hooks/synaps/hook'
+import { ComplianceOnboardingVendor, SynapsSessionStatus } from '../../types'
+import { WarningAlert } from '../Alert/InfoAlert'
+import { ModalButton } from '../Button/ModalButton'
+import { NetworkDropdown } from '../Dropdowns/NetworkDropdown'
+import { StyledTextField } from '../Input/StyledTextField'
 import {
   StyledCard,
-  StyledComplianceChip,
-  StyledComplianceChipSynapsStatus,
+  StyledComplianceChip
 } from './CompliancePortal'
-import Image from 'next/image'
-import { complianceVendorConfig } from '../../constants/complianceConfig'
-import ExternalLink from '../../../public/images/external-link-icon.svg'
-import { ComplianceOnboardingVendor, SynapsSessionStatus } from '../../types'
-import { AlignedRow } from '../Box/AlignedRow'
-import { ModalButton } from '../Button/ModalButton'
-import { backgrounds, borderRadius } from 'polished'
-import { NetworkDropdown } from '../Dropdowns/NetworkDropdown'
-import RefreshIcon from '@mui/icons-material/Refresh'
-import { useEffect, useState } from 'react'
-import { useChainContext } from '../../contexts/ChainContext/hooks'
-import { supportedChains } from '../../constants/chains'
-import axios from 'axios'
-import { useSynaps } from '../../hooks/synaps/hook'
-import { formatSessionStatus } from '../../services/synapsService'
-import { StyledTextField } from '../Input/StyledTextField'
 
 interface NotCompliantCardProps {
   onVerify: (vendor: ComplianceOnboardingVendor, email?: string) => void
@@ -146,13 +141,6 @@ export const NotCompliantCard = ({
                     <StyledComplianceChip label='KYB' />
                   )}
                 </Stack>
-                {vendor === ComplianceOnboardingVendor.SYNAPS &&
-                  session &&
-                  session.status && (
-                    <StyledComplianceChipSynapsStatus
-                      label={formatSessionStatus(session.status)}
-                    />
-                  )}
               </Stack>
 
               <Typography
