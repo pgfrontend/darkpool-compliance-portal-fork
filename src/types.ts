@@ -1,5 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
+declare global {
+  interface Window {
+    gtag: any
+  }
+}
+
 export class DarkpoolError extends Error {
   constructor(message: string) {
     super(message)
@@ -61,7 +67,6 @@ export enum ComplianceOnboardingVendor {
   KEYRING = 1,
   ZKME = 2,
   COINBASE_EAS = 4,
-  SYNAPS = 8
 }
 
 export interface AddSignatureRequest {
@@ -124,17 +129,7 @@ export interface GetStatusResponse {
     }
     provider: {
       status: boolean
-    },
+    }
     mintRequired: boolean
   } | null
-}
-
-
-export enum SynapsSessionStatus {
-  SUBMISSION_REQUIRED = 'SUBMISSION_REQUIRED',
-  PENDING_VERIFICATION = 'PENDING_VERIFICATION',
-  APPROVED = 'APPROVED',
-  RESUBMISSION_REQUIRED = 'RESUBMISSION_REQUIRED',
-  REJECTED = 'REJECTED',
-  RESET = 'RESET'
 }

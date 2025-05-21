@@ -8,33 +8,17 @@ import { supportedChains } from '../../constants/chains'
 import { complianceVendorConfig } from '../../constants/complianceConfig'
 import { dappConfig } from '../../constants/featureConfig'
 import { useChainContext } from '../../contexts/ChainContext/hooks'
-import { useSynaps } from '../../hooks/synaps/hook'
-import { ComplianceOnboardingVendor, SynapsSessionStatus } from '../../types'
+import { ComplianceOnboardingVendor } from '../../types'
 import { WarningAlert } from '../Alert/InfoAlert'
 import { ModalButton } from '../Button/ModalButton'
 import { NetworkDropdown } from '../Dropdowns/NetworkDropdown'
 import { StyledTextField } from '../Input/StyledTextField'
-import {
-  StyledCard,
-  StyledComplianceChip
-} from './CompliancePortal'
+import { StyledCard, StyledComplianceChip } from './CompliancePortal'
 
 interface NotCompliantCardProps {
   onVerify: (vendor: ComplianceOnboardingVendor, email?: string) => void
   onCheckCompliance: () => void
   onBridgeToken: (sourceChainId: number) => void
-}
-
-interface FetchSessionResponse {
-  statusCode: number
-  path: string
-  timestamp: string
-  success: true
-  error: null
-  body: {
-    sessionId: string
-    status: SynapsSessionStatus
-  }
 }
 
 export const NotCompliantCard = ({
@@ -48,8 +32,6 @@ export const NotCompliantCard = ({
   const { address } = useAccount()
 
   const currentChainConfig = supportedChains[chainId]
-
-  const { launchSynaps, session } = useSynaps(chainId)
 
   const onSelectSourceChain = (chainId: number) => {
     setSourceChainId(chainId)
@@ -150,38 +132,28 @@ export const NotCompliantCard = ({
               >
                 {complianceVendorConfig[vendor].description}
               </Typography>
-              <Stack direction='row' spacing={2} alignItems='center'>
-              {vendor === ComplianceOnboardingVendor.SYNAPS && (!session || !session.status) ? (
-                <StyledTextField
-                placeholder='Input your email to continue'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                sx={{
-                  width: '200px'
-                }}
-               />) : (
-                <Box sx = {{width: '200px'}}/>)}
-                <Button
-                variant='contained'
-                color='primary'
-                onClick={() => email === '' ? onVerify(vendor): onVerify(vendor, email)}
-                sx={{
-                  width: 'fit-content',
-                  padding: '10px',
-                  lineHeight: '16px',
-                  fontSize: '14px',
-                  borderRadius: '50px',
-                }}
-                disabled={
-                  vendor === ComplianceOnboardingVendor.SYNAPS && (!session || !session.status) &&
-                  !(email && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))
-                }
+              <Stack
+                direction='row'
+                spacing={2}
+                alignItems='center'
               >
-                {vendor === ComplianceOnboardingVendor.SYNAPS &&
-                session &&
-                session.status ? (
-                  'Continue'
-                ) : (
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={() =>
+                    email === '' ? onVerify(vendor) : onVerify(vendor, email)
+                  }
+                  sx={{
+                    width: 'fit-content',
+                    padding: '10px',
+                    lineHeight: '16px',
+                    fontSize: '14px',
+                    borderRadius: '50px',
+                  }}
+                  disabled={
+                    !(email && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))
+                  }
+                >
                   <Stack
                     direction='row'
                     gap='8px'
@@ -195,8 +167,7 @@ export const NotCompliantCard = ({
                       alt='external-link-icon'
                     />
                   </Stack>
-                )}
-              </Button>
+                </Button>
               </Stack>
             </StyledCard>
           ))}
