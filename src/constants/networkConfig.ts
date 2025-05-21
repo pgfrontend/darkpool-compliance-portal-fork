@@ -82,7 +82,7 @@ export const networkConfig: { [chainId: number]: NetworkConfig } = {
     },
   },
   [ChainId.HARDHAT_BASE]: {
-    accessPortal: '0x0',
+    accessPortal: '0x00B0517de6b2b09aBD3a7B69d66D85eFdb2c7d94',
     complianceManager: '0x0',
     darkpoolAssetManager: '0x045857BDEAE7C1c7252d611eB24eB55564198b4C',
     explorerUrl: {
