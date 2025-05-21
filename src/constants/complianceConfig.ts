@@ -33,12 +33,4 @@ export const complianceVendorConfig: Record<number, VendorConfig> = {
     isKyc: true,
     isKyb: false,
   },
-  [ComplianceOnboardingVendor.SYNAPS]: {
-    name: 'Synaps',
-    logo: '/images/compliance/synaps.png',
-    description:
-      'Detect fraud, mitigate risk and comply with local and global regulations. Fast-track your online verifications with our KYC / AML and KYB solutions.',
-    isKyc: false,
-    isKyb: true,
-  },
 }

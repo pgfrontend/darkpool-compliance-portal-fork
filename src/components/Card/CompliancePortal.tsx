@@ -13,7 +13,6 @@ import { AnnounceCard } from './AnnounceCard'
 import { ConnectWalletCard } from './ConnectWalletCard'
 import { VerifyAddressCard } from './VerifyAddressCard'
 import { useKeyring } from '../../hooks/keyring/hook'
-import { useSynaps } from '../../hooks/synaps/hook'
 
 const StepEnum = {
   NOT_CONNECTED: 1,
@@ -144,12 +143,3 @@ export const StyledComplianceChip = styled(Chip)(() => {
     textTransform: 'uppercase',
   }
 })
-
-export const StyledComplianceChipSynapsStatus = styled(StyledComplianceChip)(
-  () => {
-    return {
-      border: '1px solid #F59E0B',
-      background: '#FEFAE8',
-    }
-  }
-)
