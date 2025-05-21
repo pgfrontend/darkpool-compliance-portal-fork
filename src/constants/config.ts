@@ -4,7 +4,7 @@ import { networkConfig } from './networkConfig';
 const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID) || (() => { throw new Error('NEXT_PUBLIC_CHAIN_ID is not defined'); })()
 const SUPPORTED_CHAINS = process.env.NEXT_PUBLIC_SUPPORTED_CHAINS || (() => { throw new Error('NEXT_PUBLIC_SUPPORTED_CHAINS is not defined'); })()
 const RPC_URLS = process.env.NEXT_PUBLIC_RPC_URLS || (() => { throw new Error('NEXT_PUBLIC_RPC_URLS is not defined'); })()
-
+const MINT_FEE = process.env.NEXT_PUBLIC_MINT_FEE || (() => { throw new Error('NEXT_PUBLIC_MINT_FEE is not defined'); })()
 
 const processConfig = (supportedChains: string, rpcUrls: string): Config => {
   const chains = supportedChains.split(',').map(Number)
@@ -36,5 +36,6 @@ const createChainConfig = (chainId: number, chainsConfig: Config): ChainConfig =
 
 export const chainsConfig: Config = processConfig(SUPPORTED_CHAINS, RPC_URLS)
 
-
 export const config = createChainConfig(CHAIN_ID, chainsConfig)
+
+export const mintFee = BigInt(MINT_FEE)

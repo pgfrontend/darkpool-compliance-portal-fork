@@ -3,7 +3,7 @@ import accessPortalAbi from '../abis/accessPortal.abi'
 import { wagmiConfig } from '../wagmi'
 import { writeContract } from '@wagmi/core'
 import { networkConfig } from '../constants/networkConfig'
-
+import { mintFee } from '../constants/config'
 export const mintService = async (
   receiver: string,
   expiresAt: number,
@@ -22,6 +22,7 @@ export const mintService = async (
         BigInt(signatureExpiresAt),
         signature as `0x${string}`,
       ],
+      value: mintFee,
     })
 
     return tx
@@ -51,6 +52,7 @@ export const bridgeService = async (
         BigInt(signatureExpiresAt),
         signature as `0x${string}`,
       ],
+      value: mintFee,
     })
 
     return tx
