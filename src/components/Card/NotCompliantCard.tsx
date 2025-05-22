@@ -16,7 +16,7 @@ import { StyledTextField } from '../Input/StyledTextField'
 import { StyledCard, StyledComplianceChip } from './CompliancePortal'
 
 interface NotCompliantCardProps {
-  onVerify: (vendor: ComplianceOnboardingVendor, email?: string) => void
+  onVerify: (vendor: ComplianceOnboardingVendor) => void
   onCheckCompliance: () => void
   onBridgeToken: (sourceChainId: number) => void
 }
@@ -36,8 +36,6 @@ export const NotCompliantCard = ({
   const onSelectSourceChain = (chainId: number) => {
     setSourceChainId(chainId)
   }
-
-  const [email, setEmail] = useState<string>('')
 
   const onBridge = () => {
     if (sourceChainId) {
@@ -140,9 +138,7 @@ export const NotCompliantCard = ({
                 <Button
                   variant='contained'
                   color='primary'
-                  onClick={() =>
-                    email === '' ? onVerify(vendor) : onVerify(vendor, email)
-                  }
+                  onClick={() => onVerify(vendor)}
                   sx={{
                     width: 'fit-content',
                     padding: '10px',
@@ -150,9 +146,6 @@ export const NotCompliantCard = ({
                     fontSize: '14px',
                     borderRadius: '50px',
                   }}
-                  disabled={
-                    !(email && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))
-                  }
                 >
                   <Stack
                     direction='row'

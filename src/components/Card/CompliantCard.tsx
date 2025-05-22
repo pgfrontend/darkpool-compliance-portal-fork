@@ -18,6 +18,9 @@ import { AccessToken } from '../../hooks/useAccessToken'
 import { format } from 'date-fns'
 import { formatWalletHash } from '../../helpers'
 import { useAccount } from 'wagmi'
+import { mintFee } from '../../constants'
+import { ethers } from 'ethers'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 
 interface CompliantCardProps {
   onCheckCompliance: () => void
@@ -57,6 +60,8 @@ export const CompliantCard = ({
     if (!expiresAt) return format(new Date(), 'PPP')
     return format(new Date(+expiresAt * 1000), 'PPP')
   }, [expiresAt])
+
+  const mintFeeString = ethers.utils.formatEther(mintFee)
   return (
     <Stack
       spacing={theme.spacing(4)}
@@ -90,6 +95,23 @@ export const CompliantCard = ({
             <WarningAlert
               text={`You currently do not have an access token. An access token is required to proceed with accessing our platform’s features and services.`}
             />
+
+            <Typography
+              variant='body-sm'
+              color={'white'}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: theme.spacing(1),
+                border: `1px solid ${theme.palette.primary.main}`,
+                padding: '8px 6px',
+                borderRadius: '12px',
+                background: '#77ED9150',
+              }}
+            >
+              <CheckCircleIcon sx={{ color: theme.palette.primary.main }} />
+              Minting Fee: {mintFeeString} ETH (Excludes gas fees)
+            </Typography>
 
             <Box
               sx={{
