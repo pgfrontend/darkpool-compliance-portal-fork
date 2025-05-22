@@ -63,10 +63,7 @@ export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
 
   const { launchKeyring } = useKeyring(chainId)
 
-  const onVerify = async (
-    vendor: ComplianceOnboardingVendor,
-    email?: string
-  ) => {
+  const onVerify = async (vendor: ComplianceOnboardingVendor) => {
     if (!address) {
       return
     }

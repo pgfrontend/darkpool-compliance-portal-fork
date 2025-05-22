@@ -4,6 +4,8 @@ import { wagmiConfig } from '../wagmi'
 import { writeContract } from '@wagmi/core'
 import { networkConfig } from '../constants/networkConfig'
 import { mintFee } from '../constants/config'
+import { waitForTransactionReceipt } from 'wagmi/actions'
+import { getConfirmations } from './transactionServices'
 export const mintService = async (
   receiver: string,
   expiresAt: number,
@@ -23,6 +25,11 @@ export const mintService = async (
         signature as `0x${string}`,
       ],
       value: mintFee,
+    })
+
+    await waitForTransactionReceipt(wagmiConfig, {
+      hash: tx,
+      confirmations: getConfirmations(chainId),
     })
 
     return tx
@@ -53,6 +60,11 @@ export const bridgeService = async (
         signature as `0x${string}`,
       ],
       value: mintFee,
+    })
+
+    await waitForTransactionReceipt(wagmiConfig, {
+      hash: tx,
+      confirmations: getConfirmations(chainId),
     })
 
     return tx
