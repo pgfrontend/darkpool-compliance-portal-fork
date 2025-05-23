@@ -1,19 +1,42 @@
-import { ChainConfig, Config } from '../types';
-import { networkConfig } from './networkConfig';
+import { ChainConfig, Config } from '../types'
+import { networkConfig } from './networkConfig'
 
-const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID) || (() => { throw new Error('NEXT_PUBLIC_CHAIN_ID is not defined'); })()
-const SUPPORTED_CHAINS = process.env.NEXT_PUBLIC_SUPPORTED_CHAINS || (() => { throw new Error('NEXT_PUBLIC_SUPPORTED_CHAINS is not defined'); })()
-const RPC_URLS = process.env.NEXT_PUBLIC_RPC_URLS || (() => { throw new Error('NEXT_PUBLIC_RPC_URLS is not defined'); })()
-const MINT_FEE = process.env.NEXT_PUBLIC_MINT_FEE || (() => { throw new Error('NEXT_PUBLIC_MINT_FEE is not defined'); })()
+const CHAIN_ID =
+  Number(process.env.NEXT_PUBLIC_CHAIN_ID) ||
+  (() => {
+    throw new Error('NEXT_PUBLIC_CHAIN_ID is not defined')
+  })()
+const SUPPORTED_CHAINS =
+  process.env.NEXT_PUBLIC_SUPPORTED_CHAINS ||
+  (() => {
+    throw new Error('NEXT_PUBLIC_SUPPORTED_CHAINS is not defined')
+  })()
+const RPC_URLS =
+  process.env.NEXT_PUBLIC_RPC_URLS ||
+  (() => {
+    throw new Error('NEXT_PUBLIC_RPC_URLS is not defined')
+  })()
+const MINT_FEE =
+  process.env.NEXT_PUBLIC_MINT_FEE ||
+  (() => {
+    throw new Error('NEXT_PUBLIC_MINT_FEE is not defined')
+  })()
+export const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  (() => {
+    throw new Error('NEXT_PUBLIC_BACKEND_URL is not defined')
+  })()
 
 const processConfig = (supportedChains: string, rpcUrls: string): Config => {
   const chains = supportedChains.split(',').map(Number)
   const urls = rpcUrls.split(',')
   if (urls.length !== chains.length) {
-    throw new Error('Length of NEXT_PUBLIC_RPC_URLS is not equal to supported chains')
+    throw new Error(
+      'Length of NEXT_PUBLIC_RPC_URLS is not equal to supported chains'
+    )
   }
 
-  const rpcMap: Record<number, string> = {};
+  const rpcMap: Record<number, string> = {}
   chains.forEach((chain, index) => {
     rpcMap[chain] = urls[index]
   })
@@ -25,13 +48,15 @@ const processConfig = (supportedChains: string, rpcUrls: string): Config => {
   }
 }
 
-const createChainConfig = (chainId: number, chainsConfig: Config): ChainConfig => {
+const createChainConfig = (
+  chainId: number,
+  chainsConfig: Config
+): ChainConfig => {
   return {
     chainId: chainId,
     networkConfig: networkConfig[chainId],
     rpcUrl: chainsConfig.rpcUrls[chainId],
   }
-
 }
 
 export const chainsConfig: Config = processConfig(SUPPORTED_CHAINS, RPC_URLS)
