@@ -3,7 +3,7 @@ import {
   CircularProgress,
   Stack,
   Typography,
-  useTheme
+  useTheme,
 } from '@mui/material'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -14,14 +14,11 @@ import { useToast } from '../../contexts/ToastContext/hooks'
 import { formatWalletHash } from '../../helpers'
 import { useCoinbaseEas } from '../../hooks/coinbaseEas/hook'
 import { useKeyring } from '../../hooks/keyring/hook'
-import { useSynaps } from '../../hooks/synaps/hook'
 import { useAccessToken } from '../../hooks/useAccessToken'
 import { useZkMe } from '../../hooks/zkme/hook'
 import { ComplianceOnboardingVendor } from '../../types'
 import { LoadingComplianceModal } from '../Modal/LoadingComplianceModal'
-import {
-  ContentBox
-} from './CompliancePortal'
+import { ContentBox } from './CompliancePortal'
 import { CompliantCard } from './CompliantCard'
 import { NotCompliantCard } from './NotCompliantCard'
 
@@ -29,9 +26,7 @@ interface VerifyAddressCardProps {
   logout: () => void
 }
 
-export const VerifyAddressCard = ({
-  logout,
-}: VerifyAddressCardProps) => {
+export const VerifyAddressCard = ({ logout }: VerifyAddressCardProps) => {
   const { address } = useAccount()
   const theme = useTheme()
   const [openInProgress, setOpenInProgress] = useState(false)
@@ -54,13 +49,10 @@ export const VerifyAddressCard = ({
     onGetStatus()
   }
 
-
   const closeModalAndRefresh = async () => {
     setOpenInProgress(false)
     await onCheckCompliance()
   }
-
-  const { launchSynaps } = useSynaps(chainId)
 
   const { launchWidget: launchZKmeWidget, loading: zkLoading } = useZkMe(
     address,
@@ -71,7 +63,7 @@ export const VerifyAddressCard = ({
 
   const { launchKeyring } = useKeyring(chainId)
 
-  const onVerify = async (vendor: ComplianceOnboardingVendor, email?: string) => {
+  const onVerify = async (vendor: ComplianceOnboardingVendor) => {
     if (!address) {
       return
     }
@@ -88,18 +80,6 @@ export const VerifyAddressCard = ({
       case ComplianceOnboardingVendor.COINBASE_EAS:
         setOpenInProgress(true)
         launchEas()
-        break
-      case ComplianceOnboardingVendor.SYNAPS:
-        launchSynaps(
-          address,
-          () => {
-            setOpenInProgress(true)
-          },
-          () => {
-            setOpenInProgress(true)
-          },
-          email
-        )
         break
       default:
         return
@@ -208,7 +188,7 @@ export const VerifyAddressCard = ({
       )}
       <LoadingComplianceModal
         open={openInProgress}
-        onClose={() => { }}
+        onClose={() => {}}
         doRefresh={closeModalAndRefresh}
       >
         <></>

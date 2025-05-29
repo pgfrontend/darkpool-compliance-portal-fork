@@ -32,15 +32,15 @@ const Navbar: React.FC<NavbarProps> = ({ title, onToogle }) => {
 
   return (
     <AppBar
-      position='static'
+      position='fixed'
       sx={{
         zIndex: '1049',
         width: { sm: `100%` },
         // background: '#0D0D0D',
         boxShadow: 'none',
         background: 'transparent',
-        height: '99px',
-        padding: '32px 8px 0px 8px',
+        height: '70px',
+        padding: '11px 8px 0px 8px',
       }}
     >
       <Toolbar

@@ -54,6 +54,7 @@ const Layout: React.FC<Props> = ({ children, title }) => {
           overflow: 'auto',
           position: 'relative',
           width: { sm: `100%` },
+          paddingTop: '70px',
         }}
       >
         <Box

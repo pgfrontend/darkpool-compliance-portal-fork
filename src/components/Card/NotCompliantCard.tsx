@@ -1,45 +1,24 @@
-import { Box, Button, Grid, Stack, Typography, useTheme } from '@mui/material'
-import { WarningAlert } from '../Alert/InfoAlert'
-import { dappConfig } from '../../constants/featureConfig'
-import { useAccount } from 'wagmi'
-import {
-  StyledCard,
-  StyledComplianceChip,
-  StyledComplianceChipSynapsStatus,
-} from './CompliancePortal'
-import Image from 'next/image'
-import { complianceVendorConfig } from '../../constants/complianceConfig'
-import ExternalLink from '../../../public/images/external-link-icon.svg'
-import { ComplianceOnboardingVendor, SynapsSessionStatus } from '../../types'
-import { AlignedRow } from '../Box/AlignedRow'
-import { ModalButton } from '../Button/ModalButton'
-import { backgrounds, borderRadius } from 'polished'
-import { NetworkDropdown } from '../Dropdowns/NetworkDropdown'
 import RefreshIcon from '@mui/icons-material/Refresh'
-import { useEffect, useState } from 'react'
-import { useChainContext } from '../../contexts/ChainContext/hooks'
+import { Box, Button, Grid, Stack, Typography, useTheme } from '@mui/material'
+import Image from 'next/image'
+import { useState } from 'react'
+import { useAccount } from 'wagmi'
+import ExternalLink from '../../../public/images/external-link-icon.svg'
 import { supportedChains } from '../../constants/chains'
-import axios from 'axios'
-import { useSynaps } from '../../hooks/synaps/hook'
-import { formatSessionStatus } from '../../services/synapsService'
+import { complianceVendorConfig } from '../../constants/complianceConfig'
+import { dappConfig } from '../../constants/featureConfig'
+import { useChainContext } from '../../contexts/ChainContext/hooks'
+import { ComplianceOnboardingVendor } from '../../types'
+import { WarningAlert } from '../Alert/InfoAlert'
+import { ModalButton } from '../Button/ModalButton'
+import { NetworkDropdown } from '../Dropdowns/NetworkDropdown'
 import { StyledTextField } from '../Input/StyledTextField'
+import { StyledCard, StyledComplianceChip } from './CompliancePortal'
 
 interface NotCompliantCardProps {
-  onVerify: (vendor: ComplianceOnboardingVendor, email?: string) => void
+  onVerify: (vendor: ComplianceOnboardingVendor) => void
   onCheckCompliance: () => void
   onBridgeToken: (sourceChainId: number) => void
-}
-
-interface FetchSessionResponse {
-  statusCode: number
-  path: string
-  timestamp: string
-  success: true
-  error: null
-  body: {
-    sessionId: string
-    status: SynapsSessionStatus
-  }
 }
 
 export const NotCompliantCard = ({
@@ -54,13 +33,9 @@ export const NotCompliantCard = ({
 
   const currentChainConfig = supportedChains[chainId]
 
-  const { launchSynaps, session } = useSynaps(chainId)
-
   const onSelectSourceChain = (chainId: number) => {
     setSourceChainId(chainId)
   }
-
-  const [email, setEmail] = useState<string>('')
 
   const onBridge = () => {
     if (sourceChainId) {
@@ -146,13 +121,6 @@ export const NotCompliantCard = ({
                     <StyledComplianceChip label='KYB' />
                   )}
                 </Stack>
-                {vendor === ComplianceOnboardingVendor.SYNAPS &&
-                  session &&
-                  session.status && (
-                    <StyledComplianceChipSynapsStatus
-                      label={formatSessionStatus(session.status)}
-                    />
-                  )}
               </Stack>
 
               <Typography
@@ -162,38 +130,23 @@ export const NotCompliantCard = ({
               >
                 {complianceVendorConfig[vendor].description}
               </Typography>
-              <Stack direction='row' spacing={2} alignItems='center'>
-              {vendor === ComplianceOnboardingVendor.SYNAPS && (!session || !session.status) ? (
-                <StyledTextField
-                placeholder='Input your email to continue'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                sx={{
-                  width: '200px'
-                }}
-               />) : (
-                <Box sx = {{width: '200px'}}/>)}
-                <Button
-                variant='contained'
-                color='primary'
-                onClick={() => email === '' ? onVerify(vendor): onVerify(vendor, email)}
-                sx={{
-                  width: 'fit-content',
-                  padding: '10px',
-                  lineHeight: '16px',
-                  fontSize: '14px',
-                  borderRadius: '50px',
-                }}
-                disabled={
-                  vendor === ComplianceOnboardingVendor.SYNAPS && (!session || !session.status) &&
-                  !(email && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))
-                }
+              <Stack
+                direction='row'
+                spacing={2}
+                alignItems='center'
               >
-                {vendor === ComplianceOnboardingVendor.SYNAPS &&
-                session &&
-                session.status ? (
-                  'Continue'
-                ) : (
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={() => onVerify(vendor)}
+                  sx={{
+                    width: 'fit-content',
+                    padding: '10px',
+                    lineHeight: '16px',
+                    fontSize: '14px',
+                    borderRadius: '50px',
+                  }}
+                >
                   <Stack
                     direction='row'
                     gap='8px'
@@ -207,8 +160,7 @@ export const NotCompliantCard = ({
                       alt='external-link-icon'
                     />
                   </Stack>
-                )}
-              </Button>
+                </Button>
               </Stack>
             </StyledCard>
           ))}

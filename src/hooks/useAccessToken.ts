@@ -10,7 +10,13 @@ import {
   GetStatusResponse,
 } from '../types'
 import { useToast } from '../contexts/ToastContext/hooks'
-import { bridgeService, mintService } from '../services/accessTokenService'
+import {
+  bridgeService,
+  getStatusService,
+  mintService,
+  postBridgeService,
+  postMintService,
+} from '../services/accessTokenService'
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -33,8 +39,13 @@ export const useAccessToken = () => {
 
   const [expiresAt, setExpiresAt] = useState<string | null>(null)
 
-  const { showPendingToast,updatePendingToast, closeToast, showSuccessToast, showWarningToast } =
-    useToast()
+  const {
+    showPendingToast,
+    updatePendingToast,
+    closeToast,
+    showSuccessToast,
+    showWarningToast,
+  } = useToast()
 
   useEffect(() => {
     if (address && chainId) {
@@ -50,17 +61,7 @@ export const useAccessToken = () => {
     setMintLoading(true)
     showPendingToast(undefined, 'Creating signature...')
     try {
-      const response = await axios({
-        method: 'POST',
-        url: `${BACKEND_URL}/api/token/signature/mint`,
-        data: {
-          receiverAddress: address,
-          targetChainId: chainId.toString(),
-        } as AddSignatureRequest,
-      })
-
-      const accessToken = response.data as AddSignatureResponse
-
+      const accessToken = await postMintService(address, chainId)
       if (!accessToken.body) {
         throw new Error('Access token is null')
       }
@@ -74,8 +75,7 @@ export const useAccessToken = () => {
       )
 
       showSuccessToast(tx, 'Signature added successfully')
-      setIsAuthorized(true)
-      setExpiresAt(accessToken.body.expiresAt)
+      await onGetStatus()
     } catch (error: any) {
       console.error(error.message)
       setError(error.message)
@@ -93,21 +93,14 @@ export const useAccessToken = () => {
     }
     try {
       setIsGetStatusLoading(true)
-      const response = await axios({
-        method: 'GET',
-        url: `${BACKEND_URL}/api/token/status`,
-        params: {
-          walletAddress: address,
-          targetChainId: chainId.toString(),
-        } as GetStatusRequest,
-      })
-
-      const token = response.data as GetStatusResponse
+      const token = await getStatusService(address, chainId)
       if (!token.body) {
         throw new Error('Token is null')
       }
 
-      setIsCompliant(token.body.provider.status || token.body.accessToken.status || false)
+      setIsCompliant(
+        token.body.provider.status || token.body.accessToken.status || false
+      )
       setMintRequired(token.body.mintRequired || false)
       setIsAuthorized(token.body.accessToken.status)
       setExpiresAt(token.body.accessToken.expiresAt)
@@ -128,17 +121,11 @@ export const useAccessToken = () => {
     setBridgeLoading(true)
     showPendingToast(undefined, 'Bridging token...')
     try {
-      const response = await axios({
-        method: 'POST',
-        url: `${BACKEND_URL}/api/token/signature/bridge`,
-        data: {
-          receiverAddress: address, // address of wallet receiving AT
-          targetChainId: chainId.toString(), // chain id where AT will be minted
-          sourceChainId: sourceChainId.toString(), // chain id from where AT will be imported
-        } as BridgeSignatureRequest,
-      })
-
-      const accessToken = response.data as BridgeSignatureResponse
+      const accessToken = await postBridgeService(
+        address,
+        chainId,
+        sourceChainId
+      )
 
       if (!accessToken.body) {
         throw new Error('Nothing to bridge on this chain')
@@ -153,9 +140,8 @@ export const useAccessToken = () => {
         chainId
       )
 
-      setIsAuthorized(true)
-      setExpiresAt(accessToken.body.expiresAt)
       showSuccessToast(tx, 'Bridge signature successfully')
+      await onGetStatus()
     } catch (error: any) {
       console.error(error)
       setError(error.message)
